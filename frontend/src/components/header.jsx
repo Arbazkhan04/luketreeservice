@@ -21,6 +21,10 @@ export default function Header() {
     navigate('/review');
   };
 
+  const handleLogoClick = () =>{
+    navigate('/')
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -40,6 +44,7 @@ export default function Header() {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 1 }}
+              onClick={handleLogoClick}
             >
               <img 
                 src="/file.png" 

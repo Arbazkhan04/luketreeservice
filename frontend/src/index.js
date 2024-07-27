@@ -8,6 +8,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './App.css'; 
 
+import 'bootstrap/dist/css/bootstrap.min.css'; // import bootrap
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
