@@ -6,7 +6,7 @@ import Login from './components/login'
 import Review from './components/review'
 
 function App(){
-   
+
    return (
     <Router>
       <div>
@@ -14,7 +14,7 @@ function App(){
         <Routes>
           <Route exact path="/" element={<Home/>} />
           <Route path="/login" element={<Login/>} />
-          <Route path="contact" element={<Review/>} />
+          <Route path="review" element={<Review/>} />
         </Routes>
       </div>
     </Router>

@@ -1,5 +1,6 @@
 import SwipeableTextMobileStepper from './carousel'
 import { Container, Box, Typography } from '@mui/material';
+import ReviewCard from './reviewCard';
 
 
 
@@ -29,6 +30,9 @@ export default function Home() {
 
            {/* carousel section */}
            <SwipeableTextMobileStepper />
+
+           {/* review sections */}
+            <ReviewCard/>
 
         </Container >
     )
