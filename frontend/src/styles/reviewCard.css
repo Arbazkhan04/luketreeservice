@@ -97,7 +97,7 @@ div.neighborhood span {
 
 .mat-card>:first-child,
 .mat-card-content>:first-child {
-    margin-top: 0;
+    margin-top: -22px;
 }
 
 .rating span.date {
@@ -189,6 +189,7 @@ input[type="checkbox"]:not(:checked) ~ .read-less {
         width: 65%;
     } 
 }
+
 
 
 

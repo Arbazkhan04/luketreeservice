@@ -1,6 +1,18 @@
+import React, { useState } from 'react';
 import '../styles/reviewCard.css'; // Import custom CSS if needed
 
 const ReviewCard = () => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [buttonText, setButtonText] = useState('Read More');
+
+    const toggleReadMore = () => {
+        setIsExpanded(!isExpanded);
+        setButtonText(isExpanded ? 'Read More' : 'Show Less');
+    };
+
+    const reviewText = "Luke was very knowledgeable and friendly. He met expectations and in a timely manner. Prices were reasonable and I'd hire him again. Thanks, Luke.";
+    const shortText = reviewText.slice(0, 100) + '...';
+
     return (
         <div className="container mt-4">
             <div className="row justify-content-center">
@@ -38,16 +50,16 @@ const ReviewCard = () => {
                             </div>
                             <div className="read-more">
                                 <p className="read-more__text mb-2">
-                                    Luke was very knowledgeable and friendly.
-                                    He met expectations and in a timely manner. Prices were reasonable and I'd hire him again.
-                                    Thanks, Luke.
+                                    {isExpanded ? reviewText : shortText}
                                 </p>
-                                <div className="readmore-emoji">
-                                    <label className="read-more__label ms-2">Read More</label>
-                                    <img src="emoji.webp" alt="" />
-                                    <img className="sec-emoji" src="heart.png" alt="" />
-                                    <sub>2</sub>
-                                </div>
+                                {reviewText.length > 100 && (
+                                    <div className="readmore-emoji" onClick={toggleReadMore}>
+                                        <label className="read-more__label ms-2">{buttonText}</label>
+                                        <img src="emoji.webp" alt="" />
+                                        <img className="sec-emoji" src="heart.png" alt="" />
+                                        <sub>2</sub>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
