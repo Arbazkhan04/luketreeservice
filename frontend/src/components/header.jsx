@@ -1,91 +1,25 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import arrow from '../assets/logoarrow.svg'
 
 export default function Header() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
-  const handleReviewClick = () => {
-    navigate('/review');
-  };
-
-  const handleLogoClick = () =>{
-    navigate('/')
-  };
-
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            {/* Logo/Image */}
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 1 }}
-              onClick={handleLogoClick}
-            >
-              <img 
-                src="/file.png" 
-                alt="Logo" 
-                style={{ 
-                  width: isMobile ? '150px' : '200px', 
-                  height: isMobile ? '50px' : '50px' 
-                }} 
-              />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* Login Button */}
-            <Button 
-              color="inherit" 
-              sx={{ 
-                fontSize: isMobile ? '0.75rem' : '1rem', // Responsive font size
-                p: isMobile ? 0.5 : 1, // Responsive padding
-                whiteSpace: 'nowrap' // Prevent text breaking
-              }}
-              onClick={handleLoginClick}
-            >
-              Login
-            </Button>
-            {/* Write Review Button */}
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              sx={{ 
-                ml: 2, 
-                fontSize: isMobile ? '0.75rem' : '1rem', // Responsive font size
-                p: isMobile ? 0.5 : 1, // Responsive padding
-                whiteSpace: 'nowrap' // Prevent text breaking
-              }}
-              onClick={handleReviewClick}
-            >
-              Write review
-            </Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
+
+    <div className="bg-blue-600 p-2 flex items-center justify-between w-full text-sm font-medium leading-5 shadow-[0px_4px_24px_rgba(0,0,0,0.35)] text-zinc-950">
+      <div className="flex items-center gap-2">
+        <img
+          src={require('../assets/Trees.png')}
+          alt="Tree"
+          className="animate-spin w-[50px] h-[50px]"
+        />
+        <h1 className="text-white font-signika text-xl">Luke Tree Service</h1>
+      </div>
+      <div className="flex gap-1 justify-center py-2 pr-2 pl-3 bg-white shadow rounded-[1000px] items-center">
+        <div>Log In</div>
+        <img
+          loading="lazy"
+          src={arrow}
+          className="shrink-0 w-4 aspect-square"
+        />
+      </div>
+    </div>
+  )
 }

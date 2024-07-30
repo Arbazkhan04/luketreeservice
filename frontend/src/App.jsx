@@ -1,22 +1,27 @@
-import Button from '@mui/material/Button';
+
 import Header from './components/header'
-import Home from './components/home'
+import Loader from './components/loader'
+// import Home from './components/home'
 import { BrowserRouter as Router, Route,Routes} from 'react-router-dom'
-import Login from './components/login'
-import Review from './components/review'
+import { lazy , Suspense} from 'react'
+
+const Home = lazy(()=>import('./components/home'))
+const Login = lazy(()=>import('./components/login'))
+const Review = lazy(()=>import('./components/review'))
+
 
 function App(){
 
    return (
     <Router>
-      <div>
         <Header />
+        <Suspense fallback ={<Loader />}>
         <Routes>
           <Route exact path="/" element={<Home/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="review" element={<Review/>} />
         </Routes>
-      </div>
+        </Suspense>
     </Router>
   );
 
