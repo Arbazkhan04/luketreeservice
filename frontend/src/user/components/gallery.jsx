@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import arrow from '../assets/logoarrow.svg';
-import backarrow from '../assets/backarrow.svg'
+import arrow from '../../assets/logoarrow.svg';
+import backarrow from '../../assets/backarrow.svg'
 const images = [
     'https://images.unsplash.com/photo-1444492827838-96343b09c9af?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1520262454473-a1a82276a574?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHRyZWV8ZW58MHx8MHx8fDA%3D',

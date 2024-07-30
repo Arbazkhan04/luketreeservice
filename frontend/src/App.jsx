@@ -1,13 +1,13 @@
 
-import Header from './components/header'
-import Loader from './components/loader'
+import Header from './user/components/header'
+import Loader from './user/components/loader'
 // import Home from './components/home'
 import { BrowserRouter as Router, Route,Routes} from 'react-router-dom'
 import { lazy , Suspense} from 'react'
 
-const Home = lazy(()=>import('./components/home'))
-const Login = lazy(()=>import('./components/login'))
-const Review = lazy(()=>import('./components/review'))
+const Home = lazy(()=>import('./user/components/home'))
+const Login = lazy(()=>import('./user/components/login'))
+const Review = lazy(()=>import('./user/components/review'))
 
 
 function App(){

@@ -1,7 +1,7 @@
 import Ratting from './customRatting';
-import heart from '../assets/hearth.svg';
-import location from '../assets/location.svg';
-import neighthood from '../assets/neighbour.svg';
+import heart from '../../assets/hearth.svg';
+import location from '../../assets/location.svg';
+import neighthood from '../../assets/neighbour.svg';
 
 export default function ReviewCard() {
     return (

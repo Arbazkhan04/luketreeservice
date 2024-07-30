@@ -1,13 +1,19 @@
 import PhotoGallery from './gallery';
-import '../index.css'; // Ensure your Tailwind CSS is imported here
+import '../../index.css'; // Ensure your Tailwind CSS is imported here
 import Ratting from './customRatting';
-import reviewTree from '../assets/reviewtree.svg';
-import phone from '../assets/phone.svg';
-import tick from '../assets/tick.svg';
+import reviewTree from '../../assets/reviewtree.svg';
+import phone from '../../assets/phone.svg';
+import tick from '../../assets/tick.svg';
 import ReviewCard from './reviewCard'
-
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+
+    const navigate = useNavigate();
+
+    const handleWriteReview = () => {
+        navigate('/review')
+    }
     return (
         <div className="flex flex-col items-center w-full">
             <div className="container mx-auto px-4 py-3 mt-3">
@@ -45,7 +51,7 @@ function Home() {
                         </div>
 
                     </div>
-                    <div className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-600 border-2 border-blue-400 shadow-[0px_2px_0px_rgba(0,0,0,0.30)] rounded-full flex justify-center items-center py-3">
+                    <div onClick = {handleWriteReview} className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-600 border-2 border-blue-400 shadow-[0px_2px_0px_rgba(0,0,0,0.30)] rounded-full flex justify-center items-center py-3 cursor-pointer">
                         Write a Review
                     </div>
                 </div>
