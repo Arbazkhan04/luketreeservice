@@ -1,6 +1,5 @@
 
-import star from '../assets/ratting.svg'; // Adjust the path as necessary
-
+import star from '../../assets/ratting.svg'
 const Ratting = () => {
   const stars = Array(5).fill(null); // Array with 5 elements representing the stars
 
