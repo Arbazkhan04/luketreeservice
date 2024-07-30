@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,11 +8,16 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignIn({ setIsAuthenicated, setIsAdmin }) {
+
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -20,6 +25,13 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     });
+
+    // Set authentication and admin status
+    setIsAuthenicated(true);
+    setIsAdmin(true); // Set true if the user is an admin
+
+    // Redirect to home or any other protected route
+    navigate('/admin/dashboard');
   };
 
   return (
