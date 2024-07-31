@@ -51,14 +51,14 @@ function Home() {
                         </div>
 
                     </div>
-                    <div onClick = {handleWriteReview} className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-600 border-2 border-blue-400 arounded-full flex justify-center items-center py-3 cursor-pointer">
+                    <div onClick = {handleWriteReview} className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-500 border-blue-400 rounded-full flex justify-center items-center py-3 cursor-pointer">
                         Write a Review
                     </div>
                 </div>
 
                 {/* about setion */}
                 <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
-                    <div className="flex justify-center items-center px-2.5 w-12 h-12 bg-blue-600 rounded-xl border border-blue-600 border-solid shadow-md">
+                    <div className="flex justify-center items-center px-2.5 w-12 h-12 bg-blue-600 rounded-xl border border-blue-600 border-solid shadow-md rounded-full">
                         <img
                             loading="lazy"
                             src={reviewTree}
@@ -116,7 +116,7 @@ function Home() {
                 {/* photo gallery section end */}
 
                 {/* review sections */}
-                 <ReviewCard />
+                <ReviewCard />
                 {/* review sections end */}
             </div>
 
