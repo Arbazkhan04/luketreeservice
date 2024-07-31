@@ -1,5 +1,6 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, ScanCommand, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { v4: uuidv4 } = require('uuid');  // Import the uuid package
 
 const ABOUT_TABLE = process.env.ABOUT_TABLE;
 const client = new DynamoDBClient();
@@ -25,14 +26,14 @@ const getAboutData = async (req, res) => {
 };
 
 const createAboutData = async (req, res) => {
-  const { userId, name } = req.body;
-  if (typeof userId !== "string") {
-    res.status(400).json({ error: '"userId" must be a string' });
-    return;
-  } else if (typeof name !== "string") {
+  const { name } = req.body;  // Removed userId from request body
+
+  if (typeof name !== "string") {
     res.status(400).json({ error: '"name" must be a string' });
     return;
   }
+
+  const userId = uuidv4();  // Generate a unique userId
 
   const params = {
     TableName: ABOUT_TABLE,
