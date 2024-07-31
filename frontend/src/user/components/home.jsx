@@ -51,7 +51,7 @@ function Home() {
                         </div>
 
                     </div>
-                    <div onClick = {handleWriteReview} className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-600 border-2 border-blue-400 shadow-[0px_0.5px_0px_rgba(0,0,0,0.10)] rounded-full flex justify-center items-center py-3 cursor-pointer">
+                    <div onClick = {handleWriteReview} className="order-1 md:order-3 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-600 border-2 border-blue-400 arounded-full flex justify-center items-center py-3 cursor-pointer">
                         Write a Review
                     </div>
                 </div>
