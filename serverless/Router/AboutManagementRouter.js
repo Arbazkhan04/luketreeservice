@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAboutData, createAboutData } = require('../controller/AboutManagementController');
+const { getAboutData, createAboutData , updateAboutData} = require('../controller/AboutManagementController');
 
 router.get('/getAboutData', getAboutData);
-router.post('/createAboutData', createAboutData); // Added missing forward slash
+router.post('/createAboutData', createAboutData);
+router.put('/updateAboutData/:aboutId',updateAboutData);
 
 module.exports = router;
