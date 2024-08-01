@@ -19,10 +19,10 @@ function Home() {
             <div className="container mx-auto px-4 py-3 mt-3">
                 <div className="flex flex-col md:flex-row gap-2.5 mt-3 w-full">
                     <div className='flex flex-row order-2 md:order-1 w-full md:w-[70%]'>
-                        <div className="flex-1 text-2xl font-semibold leading-10 text-slate-900">
+                        <div className="flex-1 text-2xl font-semibold leading-10 text-slate-900 pl-4">
                             Reviews
                         </div>
-                        <div className="flex gap-1.5 md:ml-0">
+                        <div className="flex gap-1.5 md:ml-0 pr-4">
                             <div className="flex gap-1 text-base text-gray-600 whitespace-nowrap">
                                 <div className="flex flex-col justify-center rounded-none">
                                     <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
