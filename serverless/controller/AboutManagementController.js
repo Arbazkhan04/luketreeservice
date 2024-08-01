@@ -52,7 +52,7 @@ const createAboutData = async (req, res) => {
     res.json({ aboutId, about });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Could not create user" });
+    res.status(500).json({ error: "Could not create about" });
   }
 };
 
