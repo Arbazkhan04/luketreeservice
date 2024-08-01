@@ -27,7 +27,7 @@ export default function Header({ isAdmin, isAuthenticated, handleLogin, handleLo
 
 
   return (
-    <div className="bg-blue-600 p-2 flex items-center justify-between w-full text-sm font-medium leading-5 shadow-[0px_4px_24px_rgba(0,0,0,0.35)] text-zinc-950">
+    <div className="bg-[#1752FD] p-2 flex items-center justify-between w-full text-sm font-medium leading-5 text-zinc-950">
       <div onClick={navigateToHome} className="flex items-center gap-2 cursor-pointer">
         <img
           src={require('../../assets/Trees.png')}

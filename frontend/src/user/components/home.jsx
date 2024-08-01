@@ -17,45 +17,45 @@ function Home() {
     return (
         <div className="flex flex-col items-center w-full">
             <div className="container mx-auto px-4 py-3 mt-3">
-            <div className="flex flex-col md:flex-row gap-2.5 mt-3 w-full">
-  <div className='flex flex-row order-2 md:order-1 w-full md:w-[70%]'>
-    <div className="flex-1 text-3xl font-semibold leading-10 text-slate-900">
-      Reviews
-    </div>
-    <div className="flex gap-1.5 md:ml-0">
-      <div className="flex gap-1 text-base text-gray-600 whitespace-nowrap">
-        <div className="flex flex-col justify-center rounded-none">
-          <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-            <div>3</div>
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-          </div>
-        </div>
-        <div className="flex flex-col justify-center text-center rounded-none">
-          <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-            <div>4</div>
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-          </div>
-        </div>
-        <div className="flex flex-col justify-center text-center rounded-none">
-          <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-            <div>6</div>
-            <div className="shrink-0 w-px h-2 bg-gray-50" />
-          </div>
-        </div>
-      </div>
+                <div className="flex flex-col md:flex-row gap-2.5 mt-3 w-full">
+                    <div className='flex flex-row order-2 md:order-1 w-full md:w-[70%]'>
+                        <div className="flex-1 text-2xl font-semibold leading-10 text-slate-900">
+                            Reviews
+                        </div>
+                        <div className="flex gap-1.5 md:ml-0">
+                            <div className="flex gap-1 text-base text-gray-600 whitespace-nowrap">
+                                <div className="flex flex-col justify-center rounded-none">
+                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                        <div>3</div>
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center text-center rounded-none">
+                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                        <div>4</div>
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center text-center rounded-none">
+                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                        <div>6</div>
+                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                    </div>
+                                </div>
+                            </div>
 
-      <div className="flex gap-1">
-        <Ratting />
-      </div>
-    </div>
-  </div>
-  <div onClick={handleWriteReview} className="order-1 md:order-2 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-blue-500 border-blue-400 rounded-full flex justify-center items-center py-3 cursor-pointer">
-    Write a Review
-  </div>
-</div>
+                            <div className="flex gap-1">
+                                <Ratting />
+                            </div>
+                        </div>
+                    </div>
+                    <div onClick={handleWriteReview} className="order-1 md:order-2 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-[#3F79FE] rounded-full flex justify-center items-center py-3 cursor-pointer">
+                        Write a Review
+                    </div>
+                </div>
 
 
                 {/* about setion */}
