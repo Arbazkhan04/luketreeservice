@@ -6,7 +6,7 @@ import img2 from '../../assets/highlight_2.png'
 import img3 from '../../assets/highlight_3.png'
 import img4 from '../../assets/highlight_4.jpg'
 
-const images = [img1,img2,img3,img4];
+const images = [img4,img1,img2,img3];
 
 const PhotoGallery = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
