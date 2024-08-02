@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import arrow from '../../assets/logoarrow.svg';
 import backarrow from '../../assets/backarrow.svg'
-const images = [
-    'https://images.unsplash.com/photo-1444492827838-96343b09c9af?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1520262454473-a1a82276a574?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHRyZWV8ZW58MHx8MHx8fDA%3D',
-    'https://images.unsplash.com/photo-1448375240586-882707db888b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9yZXN0fGVufDB8fDB8fHww',
-    'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bGFuZHNjYXBlfGVufDB8fDB8fHww',
-];
+import img1 from '../../assets/highlight_1.jpg'
+import img2 from '../../assets/highlight_2.png'
+import img3 from '../../assets/highlight_3.png'
+import img4 from '../../assets/highlight_4.jpg'
+
+const images = [img1,img2,img3,img4];
 
 const PhotoGallery = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -21,7 +21,7 @@ const PhotoGallery = () => {
 
     return (
         <div className="flex flex-col items-center px-2 py-10 mt-1 w-full">
-            <div className="relative w-full pb-[56.25%] sm:pb-[45%] md:pb-[40%] lg:pb-[35%] xl:pb-[30%]">
+            <div className="relative w-full pb-[76.25%] sm:pb-[50%] md:pb-[50%] lg:pb-[45%] xl:pb-[39%]">
                 <img
                     loading="lazy"
                     src={images[currentIndex]}

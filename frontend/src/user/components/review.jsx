@@ -64,15 +64,6 @@ const ReviewForm = () => {
               InputProps={{ style: { fontSize: 13 } }}
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField 
-              label="Link to your social media account (optional)(example facebook, linkedin, X(twitter), other)" 
-              variant="outlined" 
-              fullWidth 
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              InputProps={{ style: { fontSize: 13 } }}
-            />
-          </Grid>
         </Grid>
         <Typography component="legend">Select rating</Typography>
         <Rating
