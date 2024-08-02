@@ -1,6 +1,6 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, ScanCommand, PutCommand,UpdateCommand } = require("@aws-sdk/lib-dynamodb");
-const { v4: uuidv4 } = require('uuid'); 
+const { DynamoDBDocumentClient, ScanCommand, PutCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { v4: uuidv4 } = require('uuid');
 
 const ABOUT_TABLE = process.env.ABOUT_TABLE;
 const client = new DynamoDBClient();
@@ -95,13 +95,6 @@ const updateAboutData = async (req, res) => {
     });
   }
 };
-
-module.exports = {
-  getAboutData,
-  createAboutData,
-  updateAboutData,
-};
-
 
 module.exports = {
   getAboutData,
