@@ -2,6 +2,8 @@ org: khanawsdev
 app: serverless
 service: serverless
 
+useDotenv: true
+
 stages:
   default:
     params:
@@ -28,6 +30,7 @@ provider:
   environment:
     ABOUT_TABLE: ${param:aboutTableName}
     REVIEW_TABLE: ${param:reviewTableName}
+    JWT_SECRET: ${env:JWt_KEY}
 
 functions:
   api:
