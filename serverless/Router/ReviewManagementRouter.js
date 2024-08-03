@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {createReview,getAllReviews,deleteReview, softDeleteReview,updateReviewById} = require('../controller/ReviewManagementController');
+const {protect} = require('../Middleware/authMiddelware');
 
 router.post('/createReview',createReview);
 router.get('/getAllReviews',getAllReviews);
