@@ -90,7 +90,7 @@ function Home() {
             </div>
         </div>
         <div className="self-start mt-2 text-sm leading-6 text-gray-500">
-            Ask for Luke:
+            Ask for Luke
         </div>
         <div className="flex gap-2 justify-between self-start mt-2 text-sm font-medium tracking-normal leading-5 text-center text-zinc-950">
             <div className="flex gap-3">
