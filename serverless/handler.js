@@ -5,18 +5,16 @@ const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
 const corsOptions = {
-  origin: 'https://luketreeservice-pb6l.vercel.app', // or specify allowed origins
+  origin: 'https://luketreeservice-pb6l.vercel.app', // specify allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Set-Cookie',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   credentials: true,
-
-}
+};
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
 // Start Block Setting th Headers for your Application
