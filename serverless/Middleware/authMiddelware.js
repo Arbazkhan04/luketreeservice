@@ -1,3 +1,4 @@
+// authMiddleware.js
 const jwt = require('jsonwebtoken');
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand } = require("@aws-sdk/lib-dynamodb");
@@ -7,7 +8,8 @@ const client = new DynamoDBClient();
 const docClient = DynamoDBDocumentClient.from(client);
 
 const protect = async (req, res, next) => {
-  let token = req.cookies.jwt;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (token) {
     try {
@@ -18,7 +20,7 @@ const protect = async (req, res, next) => {
         Key: {
           userId: decoded.userId,
         },
-        ProjectionExpression: 'userId, email', // Select fields excluding password
+        ProjectionExpression: 'userId, email',
       };
 
       const { Item: user } = await docClient.send(new GetCommand(params));
@@ -28,7 +30,7 @@ const protect = async (req, res, next) => {
         throw new Error('Not authorized, user not found');
       }
 
-      req.user = user; // Attach user to the request object
+      req.user = user;
       next();
     } catch (error) {
       console.error('Error in protect middleware:', error);

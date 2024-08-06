@@ -21,25 +21,25 @@ export default function SignIn() {
 
   const [login] = useLoginMutation();
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
+
+    if (token) {
       navigate('/admin/dashboard');
     }
-  }, [userInfo, navigate]);
+  }, [token, navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
     try {
       const res = await login({ email: data.get('email'), password: data.get('password') }).unwrap();
-      console.log(res);
-      dispatch(setCredentials({ ...res }));
+      dispatch(setCredentials({ token: res.token }));
       navigate('/admin/dashboard');
     } catch (error) {
       console.error('An error occurred:', error);
