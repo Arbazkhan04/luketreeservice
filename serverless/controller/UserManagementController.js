@@ -37,8 +37,8 @@ const authUser = async (req, res) => {
         //check if password is correct
         const isMatch = await bcrypt.compare(password, user.password);
         if (user && isMatch) {
-            generateToken(res, user.userId);
-            res.status(200).json({ message: 'User authenticated successfully' });
+           const token =  generateToken(user.userId);
+            res.status(200).json({token});
         }
         else {
             return res.status(400).json({ message: 'Invalid credentials' });
@@ -86,8 +86,8 @@ const registerUser = async (req, res) => {
 
         await docClient.send(new PutCommand(putParams));
         //generate token
-        generateToken(res, user.userId);
-        res.status(201).json({ message: 'User registered successfully' });
+        const token = generateToken(user.userId);
+        res.status(201).json({ token });
 
     } catch (error) {
         res.status(500).json({ error: `could not regiester user `, message: error.message });
@@ -98,12 +98,7 @@ const registerUser = async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = (req, res) => {
-    res.cookie('jwt', '', {
-        httpOnly: true,
-        expires: new Date(0),
-    });
     res.status(200).json({ message: 'Logged out successfully' });
-
 };
 
 module.exports = {

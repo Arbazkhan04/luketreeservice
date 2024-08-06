@@ -2,12 +2,15 @@ import { useState } from 'react';
 import arrow from '../../assets/logoarrow.svg';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../slices/authSlice';
 
 export default function Header() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
-  const {userInfo} = useSelector((state) => state.auth);
+  const {token} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const navigateToHome = () => {
     navigate('/');
@@ -22,7 +25,8 @@ export default function Header() {
   };
 
   const handleLogoutAndCloseDrawer = () => {
-    // handleLogout();
+    
+    dispatch(logout());
     setIsDrawerOpen(false);
     navigateToLogin()
   };
@@ -41,7 +45,7 @@ export default function Header() {
       </div>
 
       <div className="flex gap-4 items-center">
-        {userInfo ? (
+        {token ? (
           <>
             <div className="hidden md:flex gap-4">
               <div onClick={() => navigate('/reviews')} className="text-white cursor-pointer p-2">Reviews</div>

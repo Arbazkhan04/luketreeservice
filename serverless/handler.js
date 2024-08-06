@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-  origin: 'https://luketreeservice-pb6l.vercel.app', // specify allowed origins
+  origin: 'http://localhost:3000', // specify allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   credentials: true,
