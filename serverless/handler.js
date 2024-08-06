@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // or specify allowed origins
+  origin: 'https://luketreeservice-pb6l.vercel.app', // or specify allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Set-Cookie',
   credentials: true,
