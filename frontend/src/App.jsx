@@ -16,33 +16,33 @@ const Review = lazy(() => import('./user/components/review'))
 
 
 function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isAuthenticated, setIsAuthenicated] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAuthenticated, setIsAuthenicated] = useState(false);
 
-  const handleLogin = () => {
-    setIsAdmin(true);
-    setIsAuthenicated(true);
-  }
-  const handleLogout = () => {
-    setIsAdmin(false);
-    setIsAuthenicated(false);
-  }
+  // const handleLogin = () => {
+  //   setIsAdmin(true);
+  //   setIsAuthenicated(true);
+  // }
+  // const handleLogout = () => {
+  //   setIsAdmin(false);
+  //   setIsAuthenicated(false);
+  // }
 
   return (
     <Router>
 
-      <Header isAdmin={isAdmin}
+      {/* <Header isAdmin={isAdmin}
         isAuthenticated={isAuthenticated}
         handleLogin={handleLogin}
-        handleLogout={handleLogout} />
-
+        handleLogout={handleLogout} /> */}
+       <Header />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route
             path="/login"
             element={
-              <Login setIsAuthenicated={setIsAuthenicated} setIsAdmin={setIsAdmin} />
+              <Login />
             }
           />
           <Route path="review" element={<Review />} />
@@ -51,7 +51,7 @@ function App() {
               key={path}
               path={path}
               element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProtectedRoute>
                   {element}
                 </ProtectedRoute>
               }

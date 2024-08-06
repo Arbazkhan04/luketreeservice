@@ -1,4 +1,3 @@
-
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,29 +8,42 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLoginMutation } from '../../slices/userApiSlice';
+import { setCredentials } from '../../slices/authSlice';
+import { useState, useEffect } from 'react';
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignIn({ setIsAuthenicated, setIsAdmin }) {
-
-
+export default function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (event) => {
+  const [login] = useLoginMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/admin/dashboard');
+    }
+  }, [userInfo, navigate]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
-
-    // Set authentication and admin status
-    setIsAuthenicated(true);
-    setIsAdmin(true); // Set true if the user is an admin
-
-    // Redirect to home or any other protected route
-    navigate('/admin/dashboard');
+    try {
+      const res = await login({ email: data.get('email'), password: data.get('password') }).unwrap();
+      console.log(res);
+      dispatch(setCredentials({ ...res }));
+      navigate('/admin/dashboard');
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   };
 
   return (
