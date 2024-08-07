@@ -1,0 +1,105 @@
+org: khanawsdev
+app: serverless
+service: serverless
+
+useDotenv: true
+
+stages:
+  default:
+    params:
+      aboutTableName: "about-table-${sls:stage}"
+      reviewTableName: "review-table-${sls:stage}"
+      userTableName: "auth-table-${sls:stage}"
+      s3BucketName: "jackmist-${sls:stage}"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [ReviewTable, Arn]
+            - Fn::GetAtt: [AuthTable, Arn]
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource: arn:aws:s3:::${param:s3BucketName}/*
+  environment:
+    ABOUT_TABLE: ${param:aboutTableName}
+    REVIEW_TABLE: ${param:reviewTableName}
+    USER_TABLE: ${param:userTableName}
+    S3_BUCKET: ${param:s3BucketName}
+    JWT_SECRET: ${env:JWt_KEY}
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: "*"
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: aboutId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: aboutId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:aboutTableName}
+
+    ReviewTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: reviewId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: reviewId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:reviewTableName}
+
+    AuthTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:userTableName}
+
+    ReviewImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${param:s3BucketName}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
