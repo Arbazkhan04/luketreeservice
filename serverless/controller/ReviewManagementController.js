@@ -1,7 +1,7 @@
 const multer = require('multer');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand,DeleteCommand ,PutCommand,UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const { v4: uuidv4 } = require('uuid');
 
 const REVIEW_TABLE = process.env.REVIEW_TABLE;
@@ -17,7 +17,7 @@ const upload = multer({ storage });
 const createReview = async (req, res) => {
     upload.single('image')(req, res, async (err) => {
         if (err) {
-            console.error('Multer error:', err);
+
             return res.status(500).json({ error: err.message });
         }
 
@@ -119,48 +119,80 @@ const deleteReview = async (req, res) => {
 }
 
 const updateReviewById = async (req, res) => {
-    const { reviewId } = req.params;
-    const { firstName, lastName, city, neighbourhoodName, ratting, socialMediaLink, review } = req.body;
+    upload.single('image')(req, res, async (err) => {
+        if (err) {
+            console.error('Multer error:', err);
+            return res.status(500).json({ error: err.message });
+        }
 
-    if (typeof reviewId !== 'string') {
-        res.status(400).json({ error: 'reviewId must be a string' });
-        return;
-    }
+        const { reviewId } = req.params;
+        const { firstName, lastName, city, neighbourhoodName, ratting, socialMediaLink, review } = req.body;
 
-    if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof review !== 'string' || typeof city !== 'string' || typeof neighbourhoodName !== 'string' || typeof ratting !== 'string') {
-        res.status(400).json({ error: 'attributes must be string' });
-        return;
-    }
+        if (typeof reviewId !== 'string') {
+            res.status(400).json({ error: 'reviewId must be a string' });
+            return;
+        }
 
-    const timestamp = new Date().toISOString(); // Get the current timestamp
+        if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof review !== 'string' || typeof city !== 'string' || typeof neighbourhoodName !== 'string' || typeof ratting !== 'string') {
+            res.status(400).json({ error: 'attributes must be string' });
+            return;
+        }
 
-    const params = {
-        TableName: REVIEW_TABLE,
-        Key: {
-            reviewId: reviewId
-        },
-        UpdateExpression: 'SET firstName = :firstName, lastName = :lastName, city = :city, neighbourhoodName = :neighbourhoodName, ratting = :ratting, socialMediaLink = :socialMediaLink, review = :review, updatedAt = :updatedAt',
-        ExpressionAttributeValues: {
-            ':firstName': firstName,
-            ':lastName': lastName,
-            ':city': city,
-            ':neighbourhoodName': neighbourhoodName,
-            ':ratting': ratting,
-            ':socialMediaLink': socialMediaLink || '<empty>',
-            ':review': review,
-            ':updatedAt': timestamp
-        },
-        ReturnValues: 'ALL_NEW'
-    };
+        if (!req.file) {
+            res.status(400).json({ error: 'Image is required' });
+            return;
+        }
 
-    try {
-        const command = new UpdateCommand(params);
-        const response = await docClient.send(command);
-        res.json(response.Attributes);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+        const timestamp = new Date().toISOString(); // Get the current timestamp
+
+        // Upload image to S3
+        const imageName = `${reviewId}-${Date.now()}.jpg`;
+        const uploadParams = {
+            Bucket: S3_BUCKET,
+            Key: imageName,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype
+        };
+
+        let imageUrl;
+        try {
+            await s3.send(new PutObjectCommand(uploadParams));
+            imageUrl = `https://${S3_BUCKET}.s3.amazonaws.com/${imageName}`;
+        } catch (error) {
+            res.status(500).json({ error: `Error uploading image: ${error.message}` });
+            return;
+        }
+
+        const params = {
+            TableName: REVIEW_TABLE,
+            Key: {
+                reviewId: reviewId
+            },
+            UpdateExpression: 'SET firstName = :firstName, lastName = :lastName, city = :city, neighbourhoodName = :neighbourhoodName, ratting = :ratting, socialMediaLink = :socialMediaLink, review = :review, imageUrl = :imageUrl, updatedAt = :updatedAt',
+            ExpressionAttributeValues: {
+                ':firstName': firstName,
+                ':lastName': lastName,
+                ':city': city,
+                ':neighbourhoodName': neighbourhoodName,
+                ':ratting': ratting,
+                ':socialMediaLink': socialMediaLink || '<empty>',
+                ':review': review,
+                ':imageUrl': imageUrl,
+                ':updatedAt': timestamp
+            },
+            ReturnValues: 'ALL_NEW'
+        };
+
+        try {
+            const command = new UpdateCommand(params);
+            const response = await docClient.send(command);
+            res.json(response.Attributes);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
 }
+
 
 
 const softDeleteReview = async (req, res) => {
