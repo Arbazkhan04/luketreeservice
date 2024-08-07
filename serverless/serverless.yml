@@ -10,6 +10,7 @@ stages:
       aboutTableName: "about-table-${sls:stage}"
       reviewTableName: "review-table-${sls:stage}"
       userTableName: "auth-table-${sls:stage}"
+      s3BucketName: "review-app-images-${sls:stage}"
 
 provider:
   name: aws
@@ -29,10 +30,17 @@ provider:
             - Fn::GetAtt: [UsersTable, Arn]
             - Fn::GetAtt: [ReviewTable, Arn]
             - Fn::GetAtt: [AuthTable, Arn]
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource: arn:aws:s3:::${param:s3BucketName}/*
   environment:
     ABOUT_TABLE: ${param:aboutTableName}
     REVIEW_TABLE: ${param:reviewTableName}
     USER_TABLE: ${param:userTableName}
+    S3_BUCKET: ${param:s3BucketName}
     JWT_SECRET: ${env:JWt_KEY}
 
 functions:
@@ -78,3 +86,20 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${param:userTableName}
+
+    ReviewAppImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${param:s3BucketName}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
