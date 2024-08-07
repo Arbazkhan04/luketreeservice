@@ -48,8 +48,8 @@ export default function Header() {
         {token ? (
           <>
             <div className="hidden md:flex gap-4">
-              <div onClick={() => navigate('/reviews')} className="text-white cursor-pointer p-2">Reviews</div>
-              <div onClick={() => navigate('/about')} className="text-white cursor-pointer p-2">About</div>
+              <div onClick={() => navigate('/admin/reviews')} className="text-white cursor-pointer p-2">Reviews</div>
+              <div onClick={() => navigate('/admin/about')} className="text-white cursor-pointer p-2">About</div>
               <div onClick={() => navigate('/review')} className="text-white cursor-pointer p-2">Write Review</div>
               <div onClick={handleLogoutAndCloseDrawer} className="flex gap-1 justify-center py-2 pr-2 pl-3 bg-white shadow rounded-[1000px] items-center cursor-pointer">
                 <div>Logout</div>
@@ -95,8 +95,8 @@ export default function Header() {
                 className="shrink-0 w-4 aspect-square"
               />
             </button>
-            <div onClick={() => { navigate('/reviews'); toggleDrawer(); }} className="text-black cursor-pointer mb-2">Reviews</div>
-            <div onClick={() => { navigate('/about'); toggleDrawer(); }} className="text-black cursor-pointer mb-2">About</div>
+            <div onClick={() => { navigate('/admin/reviews'); toggleDrawer(); }} className="text-black cursor-pointer mb-2">Reviews</div>
+            <div onClick={() => { navigate('admin/about'); toggleDrawer(); }} className="text-black cursor-pointer mb-2">About</div>
             <div onClick={() => { navigate('/review'); toggleDrawer(); }} className="text-black cursor-pointer mb-2">Write Review</div>
             <div onClick={handleLogoutAndCloseDrawer} className="text-black cursor-pointer mb-2">Logout</div>
           </div>
