@@ -26,7 +26,7 @@ export default function SignIn() {
   useEffect(() => {
 
     if (token) {
-      navigate('/admin/dashboard');
+      navigate('/admin/reviews');
     }
   }, [token, navigate]);
 

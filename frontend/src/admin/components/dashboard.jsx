@@ -91,7 +91,6 @@
 
 import React from 'react';
 import Ratting from '../../user/components/customRatting';
-import ReviewCard from '../../user/components/reviewCard';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaEyeSlash, FaTrash } from 'react-icons/fa'; // Importing icons from react-icons library
 import heart from '../../assets/hearth.svg';
@@ -99,11 +98,11 @@ import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
 
 function Dashboard() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const handleWriteReview = () => {
-  //     navigate('/review')
-  // }
+  const handleWriteReview = () => {
+      navigate('/review')
+  }
 
   return (
       <div className="flex flex-col items-center w-full">
@@ -142,6 +141,9 @@ function Dashboard() {
                           </div>
                       </div>
                   </div>
+                  <div onClick={handleWriteReview} className="order-1 md:order-2 w-full md:w-[30%] text-base font-semibold leading-6 text-white bg-[#3F79FE] rounded-full flex justify-center items-center py-3 cursor-pointer mb-3 md:mb-0">
+                        Write a Review
+                    </div>
               </div>
 
               {/* Review sections */}
@@ -160,7 +162,7 @@ function Dashboard() {
                           <Ratting />
                       </div>
                   </div>
-                  <div className="flex gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
+                  <div className="flex gap-2.5 justify-between mt-4 w-full text-xs leading-4 text-slate-500">
                       <div className="flex gap-1.5 whitespace-nowrap">
                           <img
                               loading="lazy"
