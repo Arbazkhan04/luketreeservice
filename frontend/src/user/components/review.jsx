@@ -46,7 +46,7 @@ const ReviewForm = () => {
 
   return (
     <Paper elevation={3} sx={{ padding: 4, maxWidth: 900, margin: 'auto', mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center" color="primary">Admin Review Form</Typography>
+      <Typography variant="h4" gutterBottom align="center" color="primary">Write Review</Typography>
       <Box
         component="form"
         onSubmit={handleSubmit}
