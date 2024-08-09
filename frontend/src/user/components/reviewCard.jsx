@@ -5,6 +5,8 @@ import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
 import { getAllReviews } from '../../apiManager/reviewApi';
 
+const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
+
 export default function ReviewCard() {
 
     const [reviews, setReviews] = useState([]);
@@ -113,22 +115,30 @@ export default function ReviewCard() {
                                 {isExpanded ? 'Read Less' : 'Read More'}
                             </div>
                         )}
-
-                        {review.totalNumberOfEmoji !== '<empty>' && (
-                            <div className="flex gap-2 mt-2">
-                                <div className="flex text-xs whitespace-nowrap text-zinc-900">
-                                    <img
-                                        loading="lazy"
-                                        src={heart}
-                                        className="shrink-0 aspect-[1.64] w-[33px]"
-                                    />
-                                    <div className="my-auto">+{review.totalNumberOfEmoji}</div>
-                                </div>
+                        {review.indexsOfEmoji !='<empty>' && (<div className="flex gap-2 mt-2">
+                            <div className="flex text-xs whitespace-nowrap text-zinc-900 relative">
+                                {review.indexsOfEmoji.split('').map((index, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`text-1xl absolute ${idx === 1 ? 'left-2 top-0' : 'left-0 top-0'
+                                            }`}
+                                    >
+                                        {emojisList[index]}
+                                    </div>
+                                ))}
+                                {review.totalNumberOfEmoji > 2 ? (
+                                    <div className="my-auto mx-6">+{review.totalNumberOfEmoji}</div>
+                                ) : (
+                                    <div className="my-auto mx-6">{review.totalNumberOfEmoji}</div>
+                                )}
+                                
                             </div>
-                        )}
+                        </div>)
+                       }
+                        
                     </div>
                 );
             })}
-        </>   
+        </>
     );
 }
