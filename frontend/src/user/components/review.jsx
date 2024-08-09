@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, TextField, Button, Rating, Typography, Grid, Paper } from '@mui/material';
+import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -7,6 +8,8 @@ const ReviewForm = () => {
   const [rating, setRating] = useState(0);
   const [selectedEmojis, setSelectedEmojis] = useState([]);
   const [additionalInfo, setAdditionalInfo] = useState('');
+  const [isNextdoorReview, setIsNextdoorReview] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleEmojiChange = (emoji) => {
     setSelectedEmojis((prev) => {
@@ -17,14 +20,25 @@ const ReviewForm = () => {
     });
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log({
       rating,
       selectedEmojis,
       additionalInfo,
+      isNextdoorReview,
+      selectedImage,
     });
   };
+
+  const {token} = useSelector((state) => state.auth);
 
   return (
     <Paper elevation={3} sx={{ padding: 4, maxWidth: 900, margin: 'auto', mt: 5 }}>
@@ -38,7 +52,8 @@ const ReviewForm = () => {
           gap: 3,
         }}
       >
-      <Grid container spacing={2}>
+        <Grid container spacing={2}>
+          {/* Your existing form fields */}
           <Grid item xs={12} sm={6}>
             <TextField
               label="First name"
@@ -87,9 +102,11 @@ const ReviewForm = () => {
               InputProps={{ style: { fontSize: 13 } }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {token && (
+            <>
+            <Grid item xs={12} sm={6}>
             <TextField
-              label="Link to your social media account (optional)(example facebook, linkedin, X(twitter), other)"
+              label="Select number of emojis"
               variant="outlined"
               fullWidth
               InputLabelProps={{ style: { fontSize: 12 } }}
@@ -122,6 +139,10 @@ const ReviewForm = () => {
               ))}
             </Box>
           </Grid>
+          </>
+          )
+          }
+          
         </Grid>
         <Typography component="legend">Select rating</Typography>
         <Rating
@@ -143,11 +164,50 @@ const ReviewForm = () => {
           InputLabelProps={{ style: { fontSize: 12 } }}
           InputProps={{ style: { fontSize: 13 } }}
         />
-        <Button variant="contained" component="label" sx={{ mt: 2, mb: 2 }}>
-          Pick Image
-          <input type="file" hidden />
+
+        {/* Checkbox for "Review from Nextdoor?" */}
+        {token && (
+          <>
+           <FormControlLabel
+          control={
+            <Checkbox
+              checked={isNextdoorReview}
+              onChange={(e) => setIsNextdoorReview(e.target.checked)}
+              color="primary"
+            />
+          }
+          label="Review from Nextdoor?"
+          sx={{ mt: 2 }}
+        />
+          </>
+        )}
+
+        {/* Image upload section */}
+        {selectedImage && (
+          <Box sx={{ mt: 2 }}>
+            <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', height:'300px',width:'300px', borderRadius: 8 }} />
+          </Box>
+        )}
+        <Button
+          variant="contained"
+          component="label"
+          sx={{
+            mt: 2,
+            mb: 2,
+            backgroundColor: '#1976d2',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#115293',
+            },
+            textTransform: 'none',
+          }}
+        >
+          Upload Image
+          <input type="file" hidden onChange={handleImageChange} />
         </Button>
-        <Button variant="contained" color="primary" type="submit" fullWidth>Submit</Button>
+        <Button variant="contained" color="primary" type="submit" fullWidth>
+          Submit
+        </Button>
       </Box>
     </Paper>
   );

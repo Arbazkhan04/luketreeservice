@@ -22,7 +22,7 @@ const createReview = async (req, res) => {
         }
 
         try {
-            const { firstName, lastName, city, neighbourhoodName, ratting, status, socialMediaLink, review } = req.body;
+            const { firstName, lastName, city, neighbourhoodName, ratting, status, socialMediaLink, review,indexsOfEmoji,totalNumberOfEmoji,isNextDoorReview} = req.body;
 
             if (
                 typeof firstName !== 'string' ||
@@ -31,14 +31,19 @@ const createReview = async (req, res) => {
                 typeof neighbourhoodName !== 'string' ||
                 typeof ratting !== 'string' ||
                 typeof status !== 'string' ||
-                typeof review !== 'string'
+                typeof review !== 'string' ||
+                typeof indexsOfEmoji!=='string' || 
+                typeof totalNumberOfEmoji!=='string' ||
+                 typeof isNextDoorReview!=='string'
             ) {
                 console.error('Validation error:', req.body);
                 return res.status(400).json({ error: 'attributes must be string' });
             }
 
             const reviewId = uuidv4();
-            const timestamp = new Date().toISOString();
+            // unix time
+            const timestamp = new Date().getTime();
+
             const imageName = `${reviewId}.jpg`;
             const imageUrl = `https://${S3_BUCKET}.s3.amazonaws.com/${imageName}`;
 
@@ -64,6 +69,9 @@ const createReview = async (req, res) => {
                     ratting,
                     status,
                     imageUrl,
+                    indexsOfEmoji:indexsOfEmoji || '<empty>',
+                    totalNumberOfEmoji:totalNumberOfEmoji || '<empty>',
+                    isNextDoorReview:isNextDoorReview || '0',
                     createdAt: timestamp,
                     updatedAt: timestamp,
                 },
@@ -126,24 +134,35 @@ const updateReviewById = async (req, res) => {
         }
 
         const { reviewId } = req.params;
-        const { firstName, lastName, city, neighbourhoodName, ratting, socialMediaLink, review } = req.body;
+        const { firstName, lastName, city, neighbourhoodName, ratting, status, socialMediaLink, review,indexsOfEmoji,totalNumberOfEmoji,isNextDoorReview} = req.body;
 
-        if (typeof reviewId !== 'string') {
-            res.status(400).json({ error: 'reviewId must be a string' });
-            return;
-        }
+            if (
+                typeof firstName !== 'string' ||
+                typeof lastName !== 'string' ||
+                typeof city !== 'string' ||
+                typeof neighbourhoodName !== 'string' ||
+                typeof ratting !== 'string' ||
+                typeof status !== 'string' ||
+                typeof review !== 'string' ||
+                typeof indexsOfEmoji!=='string' || 
+                typeof totalNumberOfEmoji!=='string' ||
+                 typeof isNextDoorReview!=='string'
+            ) {
+                console.error('Validation error:', req.body);
+                return res.status(400).json({ error: 'attributes must be string' });
+            }
 
-        if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof review !== 'string' || typeof city !== 'string' || typeof neighbourhoodName !== 'string' || typeof ratting !== 'string') {
-            res.status(400).json({ error: 'attributes must be string' });
-            return;
-        }
+            if(typeof reviewId !== 'string'){
+                return res.status(400).json({error:'attributes must be string'})
+            }
+
 
         if (!req.file) {
             res.status(400).json({ error: 'Image is required' });
             return;
         }
 
-        const timestamp = new Date().toISOString(); // Get the current timestamp
+        const timestamp = new Date().getTime(); // Get the current timestamp
 
         // Upload image to S3
         const imageName = `${reviewId}-${Date.now()}.jpg`;
@@ -168,7 +187,7 @@ const updateReviewById = async (req, res) => {
             Key: {
                 reviewId: reviewId
             },
-            UpdateExpression: 'SET firstName = :firstName, lastName = :lastName, city = :city, neighbourhoodName = :neighbourhoodName, ratting = :ratting, socialMediaLink = :socialMediaLink, review = :review, imageUrl = :imageUrl, updatedAt = :updatedAt',
+            UpdateExpression: 'SET firstName = :firstName, lastName = :lastName, city = :city, neighbourhoodName = :neighbourhoodName, ratting = :ratting, socialMediaLink = :socialMediaLink, review = :review, imageUrl = :imageUrl,indexsOfEmoji = :indexsOfEmoji, totalNumberOfEmoji = :totalNumberOfEmoji, isNextDoorReview = :isNextDoorReview  updatedAt = :updatedAt',
             ExpressionAttributeValues: {
                 ':firstName': firstName,
                 ':lastName': lastName,
@@ -178,6 +197,9 @@ const updateReviewById = async (req, res) => {
                 ':socialMediaLink': socialMediaLink || '<empty>',
                 ':review': review,
                 ':imageUrl': imageUrl,
+                ':indexsOfEmoji':indexsOfEmoji,
+                ':totalNumberOfEmoji':totalNumberOfEmoji,
+                ':isNextDoorReview':isNextDoorReview,
                 ':updatedAt': timestamp
             },
             ReturnValues: 'ALL_NEW'
