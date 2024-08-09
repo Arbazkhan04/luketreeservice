@@ -47,7 +47,7 @@ function Home() {
                                 </div>
                             </div>
                             <div className="flex gap-1 items-center">
-                                <Ratting />
+                                <Ratting value = {'5'}/>
                             </div>
                         </div>
                     </div>

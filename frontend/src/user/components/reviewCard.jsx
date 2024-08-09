@@ -1,69 +1,134 @@
-import Ratting from './customRatting';
+import React, { useState, useEffect } from 'react';
+import Rating from './customRatting';
 import heart from '../../assets/hearth.svg';
 import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
+import { getAllReviews } from '../../apiManager/reviewApi';
 
 export default function ReviewCard() {
+
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [expandedReviews, setExpandedReviews] = useState({});
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const data = await getAllReviews();
+                setReviews(data); // Store the fetched reviews in the state
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReviews();
+    }, []);
+
+    const handleToggle = (reviewId) => {
+        setExpandedReviews(prev => ({
+            ...prev,
+            [reviewId]: !prev[reviewId]
+        }));
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
     return (
-        <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
-            <div className="flex gap-2.5 justify-between w-full">
-                <div className="flex gap-2.5 text-xs font-semibold leading-5 text-center text-slate-900">
-                    <img
-                        loading="lazy"
-                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjZXxlbnwwfHwwfHx8MA%3D%3D"
-                        className="shrink-0 aspect-square w-[34px] h-[34px] rounded-full object-cover"
-                    />
-                    <div className="my-auto">Christa Olson</div>
-                </div>
+        <>
+            {reviews.map((review) => {
+                const isExpanded = expandedReviews[review.reviewId];
+                const isLongReview = review.review.length > 100;
+                const reviewText = isExpanded || !isLongReview
+                    ? review.review
+                    : review.review.substring(0, 140) + '...';
 
-                <div className="flex gap-1 my-auto">
-                    <Ratting />
-                </div>
+                return (
+                    <div
+                        key={review.reviewId}
+                        className="flex flex-col p-6 mb-4 bg-white rounded-2xl border border-solid shadow-lg border-zinc-200"
+                    >
+                        <div className="flex gap-2.5 justify-between w-full">
+                            <div className="flex gap-2.5 text-xs font-semibold leading-5 text-center text-slate-900">
+                                <img
+                                    loading="lazy"
+                                    src={review.imageUrl}
+                                    className="shrink-0 aspect-square w-[34px] h-[34px] rounded-full object-cover"
+                                />
+                                <div className="my-auto">
+                                    {review.firstName} {review.lastName}
+                                </div>
+                            </div>
 
-            </div>
-            <div className="flex gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
-                <div className="flex gap-1.5 whitespace-nowrap">
-                    <img
-                        loading="lazy"
-                        src={location}
-                        className="shrink-0 w-5 aspect-square"
-                    />
-                    <div className="my-auto">Portalnd</div>
-                </div>
-                <div className="flex gap-1.5">
-                    <img
-                        loading="lazy"
-                        src={neighthood}
-                        className="shrink-0 w-5 aspect-square"
-                    />
-                    <div className="my-auto">Fare Harbor</div>
-                </div>
-            </div>
-            <div className="flex gap-2.5 justify-between mt-2">
-                <div className="text-xs font-semibold leading-5 text-center text-green-700">
-                    nextdoor review
-                </div>
-                <div className="my-auto text-xs leading-4 text-slate-500">
-                    Wed Dec 14, 2022
-                </div>
-            </div>
-            <div className="mt-2 text-xs leading-5 text-slate-900">
-                Luke was very knowledgeable and friendly. He met my expectations and
-                in a timely manner. Prices were ...{" "}
-            </div>
-            <div className="flex gap-2">
-                <div className="text-xs leading-5 text-blue-600 underline">
-                    <span className="font-bold text-blue-600 underline">read more</span>{" "}
-                </div>
-                <div className="flex text-xs whitespace-nowrap text-zinc-900">
-                    <img
-                        loading="lazy"
-                        src={heart}
-                        className="shrink-0 aspect-[1.64] w-[33px]"
-                    />
-                    <div className="my-auto">+4</div>
-                </div>
-            </div>
-        </div>
-    )
+                            <div className="flex gap-1 my-auto">
+                                <Rating value={review.ratting} />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
+                            <div className="flex gap-1.5 whitespace-nowrap">
+                                <img
+                                    loading="lazy"
+                                    src={location}
+                                    className="shrink-0 w-5 aspect-square"
+                                />
+                                <div className="my-auto">{review.city}</div>
+                            </div>
+                            <div className="flex gap-1.5">
+                                <img
+                                    loading="lazy"
+                                    src={neighthood}
+                                    className="shrink-0 w-5 aspect-square"
+                                />
+                                <div className="my-auto">{review.neighbourhoodName}</div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2.5 justify-between mt-2">
+                            <div className="text-xs font-semibold leading-5 text-center text-green-700">
+                                {review.isNextDoorReview === "1" && "Nextdoor review"}
+                            </div>
+                            <div className="my-auto text-xs leading-4 text-slate-500">
+                                {new Date(review.createdAt).toLocaleDateString('en-US', {
+                                    weekday: 'short',  // "Fri"
+                                    year: 'numeric',   // "2024"
+                                    month: 'short',    // "Aug"
+                                    day: 'numeric'     // "9"
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="mt-2 text-xs leading-5 text-slate-900">
+                            {reviewText}
+                        </div>
+
+                        {isLongReview && (
+                            <div
+                                className="text-xs leading-5 text-blue-600 underline cursor-pointer"
+                                onClick={() => handleToggle(review.reviewId)}
+                            >
+                                {isExpanded ? 'Read Less' : 'Read More'}
+                            </div>
+                        )}
+
+                        {review.totalNumberOfEmoji !== '<empty>' && (
+                            <div className="flex gap-2 mt-2">
+                                <div className="flex text-xs whitespace-nowrap text-zinc-900">
+                                    <img
+                                        loading="lazy"
+                                        src={heart}
+                                        className="shrink-0 aspect-[1.64] w-[33px]"
+                                    />
+                                    <div className="my-auto">+{review.totalNumberOfEmoji}</div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            })}
+        </>   
+    );
 }

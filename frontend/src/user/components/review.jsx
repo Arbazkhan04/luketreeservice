@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
 import { useSelector } from 'react-redux';
-
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
 const ReviewForm = () => {
+
   const [rating, setRating] = useState(0);
   const [selectedEmojis, setSelectedEmojis] = useState([]);
   const [additionalInfo, setAdditionalInfo] = useState('');
@@ -38,7 +38,11 @@ const ReviewForm = () => {
     });
   };
 
+ 
+
   const {token} = useSelector((state) => state.auth);
+
+
 
   return (
     <Paper elevation={3} sx={{ padding: 4, maxWidth: 900, margin: 'auto', mt: 5 }}>

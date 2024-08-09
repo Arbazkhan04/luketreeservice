@@ -1,8 +1,9 @@
-
 import star from '../../assets/ratting.svg'; // Adjust the path as necessary
 
-const Ratting = () => {
-  const stars = Array(5).fill(null); // Array with 5 elements representing the stars
+const Ratting = ({ value }) => {
+  // Ensure value is a number and falls within a safe range
+  const numStars = Math.min(Math.max(parseInt(value, 10) || 0, 0), 5);
+  const stars = Array(numStars).fill(null);
 
   return (
     <div className="flex gap-1">
