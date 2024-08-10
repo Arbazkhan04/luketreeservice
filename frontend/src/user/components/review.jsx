@@ -163,6 +163,7 @@ const ReviewForm = () => {
               onChange={(e) => setSelectNumberOfEmojis(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 13 } }}
+              sx={{mt: 3}}
             />
           </Grid>
 
