@@ -4,9 +4,6 @@ import axios from 'axios';
 // Create an Axios instance
 const api = axios.create({
   baseURL: 'https://8mtr18w529.execute-api.us-east-1.amazonaws.com', // Replace with your API base URL
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // You can add request interceptors to handle common tasks like adding tokens to headers

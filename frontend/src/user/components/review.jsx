@@ -1,48 +1,84 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
 import { useSelector } from 'react-redux';
+import {createReview} from '../../apiManager/reviewApi'; 
+
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
 const ReviewForm = () => {
-
-  const [rating, setRating] = useState(0);
+  const [ratting, setRating] = useState(0);
   const [selectedEmojis, setSelectedEmojis] = useState([]);
-  const [additionalInfo, setAdditionalInfo] = useState('');
+  const [selectNumberOfEmojis, setSelectNumberOfEmojis] = useState(0);
+  const [selectedEmojiIndices, setSelectedEmojiIndices] = useState('');
+  const [review, setAdditionalInfo] = useState('');
   const [isNextdoorReview, setIsNextdoorReview] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [city, setCity] = useState('');
+  const [neighbourhoodName, setNeighbourhoodName] = useState('');
+  const [socialMediaLink, setSocialMediaLink] = useState('');
 
-  const handleEmojiChange = (emoji) => {
+  const [error, setError] = useState(null);
+
+  const handleEmojiChange = (emoji, index) => {
     setSelectedEmojis((prev) => {
       if (prev.includes(emoji)) {
-        return prev.filter((item) => item !== emoji);
+        const updatedEmojis = prev.filter((item) => item !== emoji);
+        setSelectedEmojiIndices((prevIndices) => prevIndices.replace(index.toString(), ''));
+        return updatedEmojis;
+      } else if (prev.length < 2) {
+        setSelectedEmojiIndices((prevIndices) => prevIndices + index.toString());
+        return [...prev, emoji];
+      } else {
+        return prev;
       }
-      return [...prev, emoji];
     });
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setSelectedImage(file); // Store the actual file, not the URL
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log({
-      rating,
-      selectedEmojis,
-      additionalInfo,
-      isNextdoorReview,
-      selectedImage,
-    });
+
+    const formData = new FormData();
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('city', city);
+    formData.append('neighbourhoodName', neighbourhoodName);
+    formData.append('ratting', ratting.toString());
+    formData.append('status', '1');
+    formData.append('socialMediaLink', socialMediaLink);
+    formData.append('review', review);
+    formData.append('indexsOfEmoji', selectedEmojiIndices);
+    formData.append('totalNumberOfEmoji', selectNumberOfEmojis.toString());
+    formData.append('isNextDoorReview', isNextdoorReview ? '1' : '0');
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+
+    try {
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+      const response = await createReview(formData);
+      console.log(response);
+    } catch (error) {
+      setError(error);
+    }
+    
+
   };
 
- 
+  const { token } = useSelector((state) => state.auth);
 
-  const {token} = useSelector((state) => state.auth);
-
-
+  // if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <Paper elevation={3} sx={{ padding: 4, maxWidth: 900, margin: 'auto', mt: 5 }}>
@@ -57,13 +93,14 @@ const ReviewForm = () => {
         }}
       >
         <Grid container spacing={2}>
-          {/* Your existing form fields */}
           <Grid item xs={12} sm={6}>
             <TextField
               label="First name"
               variant="outlined"
               required
               fullWidth
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -74,6 +111,8 @@ const ReviewForm = () => {
               variant="outlined"
               required
               fullWidth
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -84,6 +123,8 @@ const ReviewForm = () => {
               variant="outlined"
               required
               fullWidth
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -93,65 +134,70 @@ const ReviewForm = () => {
               label="Neighborhood name"
               variant="outlined"
               fullWidth
+              value={neighbourhoodName}
+              onChange={(e) => setNeighbourhoodName(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Link to your social media account (optional)(example facebook, linkedin, X(twitter), other)"
+              label="Link to your social media account (optional)"
               variant="outlined"
               fullWidth
+              value={socialMediaLink}
+              onChange={(e) => setSocialMediaLink(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 13 } }}
             />
           </Grid>
+
           {token && (
             <>
-            <Grid item xs={12} sm={6}>
+           <Grid item xs={12} sm={6}>
             <TextField
-              label="Select number of emojis"
+              label="Number of Emoji selected"
               variant="outlined"
               fullWidth
+              value={selectNumberOfEmojis}
+              onChange={(e) => setSelectNumberOfEmojis(e.target.value)}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 13 } }}
-              sx={{ mt: 3 }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography>Select up to 2 Emojis:</Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              {emojisList.map((emoji, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    padding: 1,
-                    borderRadius: 2,
-                    border: `2px solid ${selectedEmojis.includes(emoji) ? '#1976d2' : '#ccc'}`,
-                    cursor: 'pointer',
-                    fontSize: 30,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 50,
-                    height: 50,
-                  }}
-                  onClick={() => handleEmojiChange(emoji)}
-                >
-                  {emoji}
+
+              <Grid item xs={12} sm={6}>
+                <Typography>Select up to 2 Emojis:</Typography>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  {emojisList.map((emoji, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        padding: 1,
+                        borderRadius: 2,
+                        border: `2px solid ${selectedEmojis.includes(emoji) ? '#1976d2' : '#ccc'}`,
+                        cursor: 'pointer',
+                        fontSize: 30,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 50,
+                        height: 50,
+                      }}
+                      onClick={() => handleEmojiChange(emoji, index)}
+                    >
+                      {emoji}
+                    </Box>
+                  ))}
                 </Box>
-              ))}
-            </Box>
-          </Grid>
-          </>
-          )
-          }
-          
+              </Grid>
+            </>
+          )}
         </Grid>
-        <Typography component="legend">Select rating</Typography>
+        <Typography component="legend">Select ratting</Typography>
         <Rating
-          name="rating"
-          value={rating}
+          name="ratting"
+          value={ratting}
           onChange={(event, newValue) => {
             setRating(newValue);
           }}
@@ -163,33 +209,29 @@ const ReviewForm = () => {
           multiline
           rows={4}
           fullWidth
-          value={additionalInfo}
+          value={review}
           onChange={(e) => setAdditionalInfo(e.target.value)}
           InputLabelProps={{ style: { fontSize: 12 } }}
           InputProps={{ style: { fontSize: 13 } }}
         />
 
-        {/* Checkbox for "Review from Nextdoor?" */}
         {token && (
-          <>
-           <FormControlLabel
-          control={
-            <Checkbox
-              checked={isNextdoorReview}
-              onChange={(e) => setIsNextdoorReview(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="Review from Nextdoor?"
-          sx={{ mt: 2 }}
-        />
-          </>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isNextdoorReview}
+                onChange={(e) => setIsNextdoorReview(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="Review from Nextdoor?"
+            sx={{ mt: 2 }}
+          />
         )}
 
-        {/* Image upload section */}
         {selectedImage && (
           <Box sx={{ mt: 2 }}>
-            <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', height:'300px',width:'300px', borderRadius: 8 }} />
+            <img src={URL.createObjectURL(selectedImage)} alt="Selected" style={{ maxWidth: '100%', height: '300px', width: '300px', borderRadius: 8 }} />
           </Box>
         )}
         <Button
