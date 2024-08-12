@@ -41,7 +41,7 @@ export default function ReviewCard() {
 
     return (
         <>
-            {reviews.map((review) => {
+            {reviews.filter(review => review.status === "1").map((review) => {
                 const isExpanded = expandedReviews[review.reviewId];
                 const isLongReview = review.review.length > 100;
                 const reviewText = isExpanded || !isLongReview
