@@ -39,3 +39,8 @@ export const deleteReviewById = async (reviewId) => {
     const response = await api.delete(`/ReviewManagementRouter/deleteReview/${reviewId}`);
     return response.data;
 }
+
+export const updateReviewDateById = async (reviewId, updatedDate) => {
+    const response = await api.put(`/ReviewManagementRouter/updateReviewCreatedDate/${reviewId}`, { updatedDate });
+    return response.data;
+}

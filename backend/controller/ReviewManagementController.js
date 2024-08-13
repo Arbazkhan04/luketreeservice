@@ -41,7 +41,7 @@ const createReview = async (req, res) => {
             }
 
             const reviewId = uuidv4();
-            // unix time
+            // unix time in milliseconds
             const timestamp = new Date().getTime();
 
             const imageName = `${reviewId}.jpg`;
@@ -180,7 +180,7 @@ const updateReviewById = async (req, res) => {
             return res.status(400).json({ error: 'All attributes must be strings' });
         }
 
-        const timestamp = new Date().getTime();
+       
         let imageUrl;
 
         // Handle image upload if present
@@ -213,7 +213,6 @@ const updateReviewById = async (req, res) => {
                 indexsOfEmoji = :indexsOfEmoji,
                 totalNumberOfEmoji = :totalNumberOfEmoji,
                 isNextDoorReview = :isNextDoorReview,
-                updatedAt = :updatedAt
                 ${imageUrl ? ', imageUrl = :imageUrl' : ''}
         `;
 
@@ -228,7 +227,6 @@ const updateReviewById = async (req, res) => {
             ':indexsOfEmoji': indexsOfEmoji,
             ':totalNumberOfEmoji': totalNumberOfEmoji,
             ':isNextDoorReview': isNextDoorReview,
-            ':updatedAt': timestamp,
             ...(imageUrl && { ':imageUrl': imageUrl }),
         };
 
@@ -318,6 +316,42 @@ const softDeleteReview = async (req, res) => {
     }
 }
 
+const updateReviewCreatedDate = async (req,res) => {
+    const {reviewId} = req.params;
+
+    if(typeof reviewId !== 'string'){
+        res.status(500).json({error:`reviewId must be string`});
+        return;
+    }
+
+    const {updatedDate} = req.body;
+
+     if (typeof updatedDate !== 'number' || updatedDate <= 0) {
+        res.status(500).json({ error: 'updatedDate must be a positive number representing a valid timestamp' });
+        return;
+    }
+
+    const params = {
+        TableName: REVIEW_TABLE,
+        Key: {
+            reviewId,
+        },
+        UpdateExpression: 'set updatedAt = :updatedDate',
+        ExpressionAttributeValues: {
+            ':updatedDate': updatedDate,
+        },
+        ReturnValues: 'UPDATED_NEW',
+    };
+
+    try {
+        const command = new UpdateCommand(params);
+        const response = await docClient.send(command);
+        res.json(response.Attributes);
+    }
+    catch(error){
+        res.status(500).json({error:error.message});
+    }
+}
 
 
 module.exports = {
@@ -327,5 +361,6 @@ module.exports = {
     updateReviewById,
     softDeleteReview,
     getReviewById,
-    publistBackReview
+    publistBackReview,
+    updateReviewCreatedDate
 }

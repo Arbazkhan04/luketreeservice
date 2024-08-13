@@ -17,8 +17,11 @@ export default function ReviewCard() {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
+
                 const data = await getAllReviews();
-                setReviews(data); // Store the fetched reviews in the state
+                const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
+                setReviews(sortedData); 
+
             } catch (err) {
                 setError(err);
             } finally {
@@ -94,7 +97,7 @@ export default function ReviewCard() {
                                 {review.isNextDoorReview === "1" && "Nextdoor review"}
                             </div>
                             <div className="my-auto text-xs leading-4 text-slate-500">
-                                {new Date(review.createdAt).toLocaleDateString('en-US', {
+                                {new Date(review.updatedAt).toLocaleDateString('en-US', {
                                     weekday: 'short',  // "Fri"
                                     year: 'numeric',   // "2024"
                                     month: 'short',    // "Aug"

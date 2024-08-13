@@ -2,19 +2,25 @@ import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
-const EditModal = ({ isOpen, onClose, onSave }) => {
-  const initialDate = new Date(1669252611375);
-  const [date, setDate] = useState(initialDate);
+const EditModal = ({ isOpen, onClose, onSave, reviewId, initialDate }) => {
+  
+  const [date, setDate] = useState(new Date(initialDate));
+  
+  useEffect(() => {
+    setDate(new Date(initialDate));
+  }, [initialDate])
 
   if (!isOpen) return null;
 
+
   const handleDateChange = (newDate) => {
     setDate(newDate);
-    const timestamp = newDate.getTime();
-    console.log('Selected date and time:', newDate);
-    console.log('Timestamp:', timestamp);
+  };
+
+  const handleSave = () => {
+    onSave(reviewId, date);
   };
 
   return (
@@ -32,7 +38,7 @@ const EditModal = ({ isOpen, onClose, onSave }) => {
 
         <div className="flex justify-center space-x-2">
           <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
-          <button onClick={onSave} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+          <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
         </div>
       </div>
     </div>

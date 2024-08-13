@@ -4,7 +4,7 @@ import Rating from '../../user/components/customRatting';
 import heart from '../../assets/hearth.svg';
 import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
-import { getAllReviews, unPublishReviewById,publishBackReviewById,deleteReviewById } from '../../apiManager/reviewApi';
+import { getAllReviews, unPublishReviewById, publishBackReviewById, deleteReviewById, updateReviewDateById } from '../../apiManager/reviewApi';
 import { FaEdit, FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import EditDateModal from './editDateModal';
@@ -19,10 +19,15 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [expandedReviews, setExpandedReviews] = useState({});
 
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
+  const [selectedReviewDate, setSelectedReviewDate] = useState(null);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const handleEditClick = () => {
+  const handleEditClick = (reviewId, date) => {
+    setSelectedReviewDate(date);
+    setSelectedReviewId(reviewId);
     setIsModalOpen(true);
   };
 
@@ -30,10 +35,27 @@ export default function Dashboard() {
     setIsModalOpen(false);
   };
 
-  const handleSaveChanges = () => {
-    // Logic to save changes
-    console.log('Changes saved');
-    setIsModalOpen(false);
+  const handleSaveChanges = async (reviewId, date) => {
+    try {
+      setLoading(true);
+      const response = await updateReviewDateById(reviewId, Number(date.getTime()));
+      console.log(response);
+      const updatedReviews = reviews.map(review =>
+        review.reviewId === reviewId
+          ? { ...review, updatedAt: Number(date.getTime()) }
+          : review
+      );
+
+      updatedReviews.sort((a,b)=> b.updatedAt - a.updatedAt);
+      setReviews(updatedReviews);
+      setIsModalOpen(false);
+
+    } catch (error) {
+      setError(error);
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
 
@@ -47,7 +69,9 @@ export default function Dashboard() {
     const fetchReviews = async () => {
       try {
         const data = await getAllReviews();
-        setReviews(data); // Store the fetched reviews in the state
+        const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
+
+        setReviews(sortedData);
       } catch (err) {
         setError(err);
       } finally {
@@ -70,8 +94,8 @@ export default function Dashboard() {
       setLoading(true);
       const response = await unPublishReviewById(reviewId);
       console.log(response);
-      setReviews((prevReviews) => prevReviews.map(review => 
-        review.reviewId === reviewId ? {...review, status: "0"} : review
+      setReviews((prevReviews) => prevReviews.map(review =>
+        review.reviewId === reviewId ? { ...review, status: "0" } : review
       ));
     } catch (error) {
       setError(error);
@@ -86,10 +110,10 @@ export default function Dashboard() {
       setLoading(true);
       const response = await publishBackReviewById(reviewId);
       console.log(response);
-      setReviews((prevReviews) => prevReviews.map(review => 
-        review.reviewId === reviewId ? {...review, status: "1"} : review
+      setReviews((prevReviews) => prevReviews.map(review =>
+        review.reviewId === reviewId ? { ...review, status: "1" } : review
       ));
-      
+
     } catch (error) {
       setError(error);
     }
@@ -109,7 +133,8 @@ export default function Dashboard() {
     }
     finally {
       setLoading(false);
-  }}
+    }
+  }
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -166,10 +191,9 @@ export default function Dashboard() {
           : review.review.substring(0, 140) + '...';
 
         return (
-          <div className="flex flex-col items-center w-full">
+          <div key={review.reviewId} className="flex flex-col items-center w-full">
             <div className="container mx-auto px-4 py-1 mt-1">
               <div
-                key={review.reviewId}
                 className="flex flex-col p-6 mb-4 bg-white rounded-2xl border border-solid shadow-lg border-zinc-200"
               >
                 <div className="flex gap-2.5 justify-between w-full">
@@ -214,18 +238,24 @@ export default function Dashboard() {
                   </div>
                   <div className="flex gap-2 justify-start items-center">
                     <div className="my-auto text-xs leading-4 text-slate-500">
-                      {new Date(review.createdAt).toLocaleDateString('en-US', {
+                      {new Date(review.updatedAt).toLocaleDateString('en-US', {
                         weekday: 'short',  // "Fri"
                         year: 'numeric',   // "2024"
                         month: 'short',    // "Aug"
                         day: 'numeric'     // "9"
                       })}
                     </div>
-                    <button onClick={handleEditClick} className="p-1  text-black rounded-full">
+                    <button onClick={() => handleEditClick(review.reviewId, review.updatedAt)} className="p-1  text-black rounded-full">
                       <FaEdit />
                     </button>
-                    {/* Add the EditModal component */}
-                    <EditDateModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+                    {/* Add the EditDateModal component */}
+                    <EditDateModal
+                      reviewId={selectedReviewId}
+                      initialDate={selectedReviewDate}
+                      isOpen={isModalOpen}
+                      onClose={handleCloseModal}
+                      onSave={handleSaveChanges}
+                    />
                   </div>
                 </div>
 
@@ -274,13 +304,13 @@ export default function Dashboard() {
                     </button>
                   ) :
                     (
-                      <button 
-                      onClick={() => handlePublish(review.reviewId)} 
-                      className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-                  >
-                      <FaEye />
-                  </button>
-                  )}
+                      <button
+                        onClick={() => handlePublish(review.reviewId)}
+                        className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                      >
+                        <FaEye />
+                      </button>
+                    )}
                   <button onClick={() => handleDeleteReview(review.reviewId)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
                     <FaTrash />
                   </button>
