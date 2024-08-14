@@ -7,7 +7,7 @@ import { getAllReviews } from '../../apiManager/reviewApi';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
-export default function ReviewCard() {
+export default function ReviewCard({setTotalReview}) {
 
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,10 +17,11 @@ export default function ReviewCard() {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-
                 const data = await getAllReviews();
                 const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
-                setReviews(sortedData); 
+                setReviews(sortedData.filter(review => review.status === "1")); 
+
+                setTotalReview(sortedData.length);
 
             } catch (err) {
                 setError(err);
@@ -44,7 +45,7 @@ export default function ReviewCard() {
 
     return (
         <>
-            {reviews.filter(review => review.status === "1").map((review) => {
+            {reviews.map((review) => {
                 const isExpanded = expandedReviews[review.reviewId];
                 const isLongReview = review.review.length > 100;
                 const reviewText = isExpanded || !isLongReview

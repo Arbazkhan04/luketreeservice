@@ -6,21 +6,36 @@ import phone from '../../assets/phone.svg';
 import tick from '../../assets/tick.svg';
 import ReviewCard from './reviewCard'
 import { useNavigate } from 'react-router-dom';
-import {getAboutData} from  '../../apiManager/aboutApi';
-import { useEffect,useState } from 'react';
+import { getAboutData } from '../../apiManager/aboutApi';
+import { useEffect, useState } from 'react';
+import Loader from './loader';
 
 function Home() {
 
     const navigate = useNavigate();
     const [aboutData, setAboutData] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [totalReview, setTotalReview] = useState(0);
+
 
     useEffect(() => {
         (async () => {
-            const response = await getAboutData();
-            setAboutData(response.data[0]);
-            console.log(response)
+            try {
+                setLoading(true);
+                const response = await getAboutData();
+                setAboutData(response.data[0]);
+            } catch (error) {
+                setError(error);
+            }
+            finally {
+                setLoading(false);
+            }
         })()
-    },[])
+    }, [])
+
+    // if (loading) return <div><Loader /></div>
+    if (error) return <div>Error: {error.message}</div>
 
     const handleWriteReview = () => {
         navigate('/review')
@@ -33,29 +48,18 @@ function Home() {
                         <div className="flex-1 text-2xl font-semibold leading-10 text-slate-900 pl-4 md:mt-4">
                             Reviews
                         </div>
+
                         <div className="flex gap-1.5 md:ml-0 pr-4 items-center">
                             <div className="flex gap-1 text-base text-gray-600 whitespace-nowrap items-center">
-                                <div className="flex flex-col justify-center rounded-none">
-                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
-                                        <div>3</div>
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                {totalReview.toString().split('').map((num, index) => (
+                                    <div key={index} className="flex flex-col justify-center rounded-none">
+                                        <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
+                                            <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                            <div>{num}</div> {/* Render num here */}
+                                            <div className="shrink-0 w-px h-2 bg-gray-50" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex flex-col justify-center text-center rounded-none">
-                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
-                                        <div>4</div>
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
-                                    </div>
-                                </div>
-                                <div className="flex flex-col justify-center text-center rounded-none">
-                                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
-                                        <div>6</div>
-                                        <div className="shrink-0 w-px h-2 bg-gray-50" />
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                             <div className="flex gap-1 items-center">
                                 <Ratting value={'5'} />
@@ -127,7 +131,7 @@ function Home() {
                 {/* photo gallery section end */}
 
                 {/* review sections */}
-                <ReviewCard />
+                <ReviewCard setTotalReview={setTotalReview}/>
                 {/* review sections end */}
             </div >
 
