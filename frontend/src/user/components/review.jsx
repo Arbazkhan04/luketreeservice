@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
 import { useSelector } from 'react-redux';
-import {createReview} from '../../apiManager/reviewApi'; 
+import { createReview } from '../../apiManager/reviewApi';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -20,6 +20,28 @@ const ReviewForm = () => {
   const [socialMediaLink, setSocialMediaLink] = useState('');
 
   const [error, setError] = useState(null);
+  const [imageError, setImageError] = useState('');
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const validateForm = () => {
+    const errors = {};
+    if (!neighbourhoodName) errors.neighbourhoodName = 'Neighbourhood name is required';
+    if (!firstName) errors.firstName = 'First name is required';
+    if (!lastName) errors.lastName = 'Last name is required';
+    if (!city) errors.city = 'City is required';
+    if (ratting === 0) errors.ratting = 'Rating is required';
+    if (review.trim().length < 10) errors.review = 'Review must be at least 10 characters long';
+    if (selectedEmojis.length > 2) errors.selectedEmojis = 'You can select up to 2 emojis only';
+
+    if (!selectedImage) errors.selectedImage = 'Image is required';
+    if (imageError) errors.imageError = imageError; // Ensure image format is valid
+
+    return errors;
+  };
+
+
 
   const handleEmojiChange = (emoji, index) => {
     setSelectedEmojis((prev) => {
@@ -38,13 +60,27 @@ const ReviewForm = () => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      setSelectedImage(file); // Store the actual file, not the URL
+    const validImageTypes = ['image/jpeg', 'image/png'];
+
+    if (file && !validImageTypes.includes(file.type)) {
+      setImageError('Please upload a jpg or png file.');
+      setSelectedImage(null);
+    } else {
+      setImageError('');
+      setSelectedImage(file);
     }
+
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const errors = validateForm();
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
 
     const formData = new FormData();
     formData.append('firstName', firstName);
@@ -65,13 +101,13 @@ const ReviewForm = () => {
     try {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
-    }
+      }
       const response = await createReview(formData);
       console.log(response);
     } catch (error) {
       setError(error);
     }
-    
+
 
   };
 
@@ -97,10 +133,12 @@ const ReviewForm = () => {
             <TextField
               label="First name"
               variant="outlined"
-              required
+
               fullWidth
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              error={!!validationErrors.firstName}
+              helperText={validationErrors.firstName}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -109,10 +147,11 @@ const ReviewForm = () => {
             <TextField
               label="Last name"
               variant="outlined"
-              required
               fullWidth
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              error={!!validationErrors.lastName}
+              helperText={validationErrors.lastName}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -121,10 +160,12 @@ const ReviewForm = () => {
             <TextField
               label="City"
               variant="outlined"
-              required
+
               fullWidth
               value={city}
               onChange={(e) => setCity(e.target.value)}
+              error={!!validationErrors.city}
+              helperText={validationErrors.city}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -136,6 +177,8 @@ const ReviewForm = () => {
               fullWidth
               value={neighbourhoodName}
               onChange={(e) => setNeighbourhoodName(e.target.value)}
+              error={!!validationErrors.neighbourhoodName}
+              helperText={validationErrors.neighbourhoodName}
               InputLabelProps={{ style: { fontSize: 12 } }}
               InputProps={{ style: { fontSize: 14 } }}
             />
@@ -154,18 +197,18 @@ const ReviewForm = () => {
 
           {token && (
             <>
-           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Number of Emoji selected"
-              variant="outlined"
-              fullWidth
-              value={selectNumberOfEmojis}
-              onChange={(e) => setSelectNumberOfEmojis(e.target.value)}
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              InputProps={{ style: { fontSize: 13 } }}
-              sx={{mt: 3}}
-            />
-          </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Number of Emoji selected"
+                  variant="outlined"
+                  fullWidth
+                  value={selectNumberOfEmojis}
+                  onChange={(e) => setSelectNumberOfEmojis(e.target.value)}
+                  InputLabelProps={{ style: { fontSize: 12 } }}
+                  InputProps={{ style: { fontSize: 13 } }}
+                  sx={{ mt: 3 }}
+                />
+              </Grid>
 
               <Grid item xs={12} sm={6}>
                 <Typography>Select up to 2 Emojis:</Typography>
@@ -202,8 +245,13 @@ const ReviewForm = () => {
           onChange={(event, newValue) => {
             setRating(newValue);
           }}
+          error={!!validationErrors.ratting}
+          helperText={validationErrors.ratting}
           sx={{ mb: 2 }}
         />
+        {validationErrors.ratting && (
+          <Typography color="error">{validationErrors.ratting}</Typography>
+        )}
         <TextField
           label="Please write your review here"
           variant="outlined"
@@ -212,6 +260,8 @@ const ReviewForm = () => {
           fullWidth
           value={review}
           onChange={(e) => setAdditionalInfo(e.target.value)}
+          error={!!validationErrors.review}
+          helperText={validationErrors.review}
           InputLabelProps={{ style: { fontSize: 12 } }}
           InputProps={{ style: { fontSize: 13 } }}
         />
@@ -228,6 +278,12 @@ const ReviewForm = () => {
             label="Review from Nextdoor?"
             sx={{ mt: 2 }}
           />
+        )}
+
+        {(imageError || validationErrors.selectedImage) && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {imageError || validationErrors.selectedImage}
+          </Typography>
         )}
 
         {selectedImage && (
