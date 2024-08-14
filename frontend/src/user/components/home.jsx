@@ -6,10 +6,21 @@ import phone from '../../assets/phone.svg';
 import tick from '../../assets/tick.svg';
 import ReviewCard from './reviewCard'
 import { useNavigate } from 'react-router-dom';
+import {getAboutData} from  '../../apiManager/aboutApi';
+import { useEffect,useState } from 'react';
 
 function Home() {
 
     const navigate = useNavigate();
+    const [aboutData, setAboutData] = useState({});
+
+    useEffect(() => {
+        (async () => {
+            const response = await getAboutData();
+            setAboutData(response.data[0]);
+            console.log(response)
+        })()
+    },[])
 
     const handleWriteReview = () => {
         navigate('/review')
@@ -47,7 +58,7 @@ function Home() {
                                 </div>
                             </div>
                             <div className="flex gap-1 items-center">
-                                <Ratting value = {'5'}/>
+                                <Ratting value={'5'} />
                             </div>
                         </div>
                     </div>
@@ -58,68 +69,66 @@ function Home() {
 
 
 
-                {/* about setion */ }
-    <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
-        <div className="flex justify-center items-center px-2.5 w-12 h-12 bg-blue-600 rounded-xl border border-blue-600 border-solid shadow-md rounded-full">
-            <img
-                loading="lazy"
-                src={reviewTree}
-                className="w-full aspect-square"
-            />
-        </div>
-        <div className="mt-2 text-xl font-medium leading-7">
-            <span className="">Price Starts at </span>
-            <span className="font-extrabold text-blue-600">$65</span>
-        </div>
-        <div className="mt-1 text-base leading-7 text-gray-500">
-            We trim/prune tree branches &lt; 25’ high, trim any tree of any
-            height, and remove trees &lt; 40’ high. Serving Seattle, Bothell, Mill
-            Creek, Eastside, and surrounding areas.
-        </div>
-        <div className="flex gap-5 justify-between mt-2 text-sm">
-            <div className="my-auto leading-6 text-gray-500">
-                Tap here to call
-            </div>
-            <div className="flex gap-1 justify-center py-2 pr-3 pl-2 font-medium tracking-widest text-center whitespace-nowrap bg-white border border-solid shadow border-zinc-200 leading-[155%] rounded-[1000px] text-zinc-950">
-                <img
-                    loading="lazy"
-                    src={phone}
-                    className="shrink-0 self-start aspect-[0.95] w-[19px]"
-                />
-                <div>206-321-2510</div>
-            </div>
-        </div>
-        <div className="self-start mt-2 text-sm leading-6 text-gray-500">
-            Ask for Luke
-        </div>
-        <div className="flex gap-2 justify-between self-start mt-2 text-sm font-medium tracking-normal leading-5 text-center text-zinc-950">
-            <div className="flex gap-3">
-                <img
-                    loading="lazy"
-                    src={tick}
-                    className="shrink-0 self-start aspect-square w-[19px]"
-                />
-                <div>WA State Licensed</div>
-            </div>
-            <div className="flex gap-3 whitespace-nowrap">
-                <img
-                    loading="lazy"
-                    src={tick}
-                    className="shrink-0 self-start aspect-square w-[19px]"
-                />
-                <div>Insured</div>
-            </div>
-        </div>
-    </div>
-    {/* about setion end */ }
+                {/* about setion */}
+                <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
+                    <div className="flex justify-center items-center px-2.5 w-12 h-12 bg-blue-600 rounded-xl border border-blue-600 border-solid shadow-md rounded-full">
+                        <img
+                            loading="lazy"
+                            src={reviewTree}
+                            className="w-full aspect-square"
+                        />
+                    </div>
+                    <div className="mt-2 text-xl font-medium leading-7">
+                        <span className="">Price Starts at </span>
+                        <span className="font-extrabold text-blue-600">{aboutData.priceStartAt}</span>
+                    </div>
+                    <div className="mt-1 text-base leading-7 text-gray-500">
+                        {aboutData.about}
+                    </div>
+                    <div className="flex gap-5 justify-between mt-2 text-sm">
+                        <div className="my-auto leading-6 text-gray-500">
+                            Tap here to call
+                        </div>
+                        <div className="flex gap-1 justify-center py-2 pr-3 pl-2 font-medium tracking-widest text-center whitespace-nowrap bg-white border border-solid shadow border-zinc-200 leading-[155%] rounded-[1000px] text-zinc-950">
+                            <img
+                                loading="lazy"
+                                src={phone}
+                                className="shrink-0 self-start aspect-[0.95] w-[19px]"
+                            />
+                            <div>{aboutData.phone}</div>
+                        </div>
+                    </div>
+                    <div className="self-start mt-2 text-sm leading-6 text-gray-500">
+                        Ask for Luke
+                    </div>
+                    <div className="flex gap-2 justify-between self-start mt-2 text-sm font-medium tracking-normal leading-5 text-center text-zinc-950">
+                        <div className="flex gap-3">
+                            <img
+                                loading="lazy"
+                                src={tick}
+                                className="shrink-0 self-start aspect-square w-[19px]"
+                            />
+                            <div>WA State Licensed</div>
+                        </div>
+                        <div className="flex gap-3 whitespace-nowrap">
+                            <img
+                                loading="lazy"
+                                src={tick}
+                                className="shrink-0 self-start aspect-square w-[19px]"
+                            />
+                            <div>Insured</div>
+                        </div>
+                    </div>
+                </div>
+                {/* about setion end */}
 
-    {/* photo gallery section */ }
-    <PhotoGallery />
-    {/* photo gallery section end */ }
+                {/* photo gallery section */}
+                <PhotoGallery />
+                {/* photo gallery section end */}
 
-    {/* review sections */ }
-    <ReviewCard />
-    {/* review sections end */ }
+                {/* review sections */}
+                <ReviewCard />
+                {/* review sections end */}
             </div >
 
         </div >

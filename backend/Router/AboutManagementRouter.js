@@ -5,8 +5,8 @@ const { getAboutData, createAboutData , updateAboutData} = require('../controlle
 const {protect} = require('../Middleware/authMiddelware')
 
 router.get('/getAboutData', getAboutData);
-router.post('/createAboutData',protect, createAboutData);
-router.put('/updateAboutData/:aboutId',protect,updateAboutData);
+router.post('/createAboutData', createAboutData);
+router.put('/updateAboutData/:aboutId',updateAboutData);
 
 
 module.exports = router;

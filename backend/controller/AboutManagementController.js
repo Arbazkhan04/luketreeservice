@@ -32,10 +32,10 @@ const getAboutData = async (req, res) => {
 };
 
 const createAboutData = async (req, res) => {
-  const { about } = req.body;
+  const { priceStartAt,about,phone } = req.body;
 
-  if (typeof about !== "string") {
-    res.status(400).json({ error: '"about" must be a string' });
+  if (typeof about !== "string" || typeof priceStartAt !== 'string' || typeof phone !=='string') {
+    res.status(400).json({ error: '"attributes" must be a string' });
     return;
   }
 
@@ -43,13 +43,13 @@ const createAboutData = async (req, res) => {
 
   const params = {
     TableName: ABOUT_TABLE,
-    Item: { aboutId, about },
+    Item: { aboutId,priceStartAt,about,phone },
   };
 
   try {
     const command = new PutCommand(params);
     await docClient.send(command);
-    res.json({ aboutId, about });
+    res.json({ data:params.Item });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Could not create about" });
@@ -59,19 +59,22 @@ const createAboutData = async (req, res) => {
 
 const updateAboutData = async (req, res) => {
   const aboutId = req.params.aboutId;
-  const { about } = req.body;
 
-  if (typeof about !== "string") {
-    res.status(400).json({ error: '"about" must be a string' });
+  const { priceStartAt,about,phone } = req.body;
+
+  if (typeof about !== "string" || typeof priceStartAt !== 'string' || typeof phone !=='string') {
+    res.status(400).json({ error: '"attributes" must be a string' });
     return;
   }
 
   const params = {
     TableName: ABOUT_TABLE,
     Key: { aboutId },
-    UpdateExpression: "set about = :about",
+    UpdateExpression: "set priceStartAt = :priceStartAt, about = :about, phone = :phone",
     ExpressionAttributeValues: {
+      ":priceStartAt":priceStartAt,
       ":about": about,
+      ":phone": phone,
     },
     ReturnValues: "UPDATED_NEW",
   };
