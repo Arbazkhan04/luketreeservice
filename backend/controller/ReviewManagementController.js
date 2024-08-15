@@ -180,7 +180,6 @@ const updateReviewById = async (req, res) => {
             return res.status(400).json({ error: 'All attributes must be strings' });
         }
 
-       
         let imageUrl;
 
         // Handle image upload if present
@@ -202,7 +201,7 @@ const updateReviewById = async (req, res) => {
         }
 
         // Prepare DynamoDB update parameters
-        const updateExpression = `
+        let updateExpression = `
             SET firstName = :firstName,
                 lastName = :lastName,
                 city = :city,
@@ -212,8 +211,7 @@ const updateReviewById = async (req, res) => {
                 review = :review,
                 indexsOfEmoji = :indexsOfEmoji,
                 totalNumberOfEmoji = :totalNumberOfEmoji,
-                isNextDoorReview = :isNextDoorReview,
-                ${imageUrl ? ', imageUrl = :imageUrl' : ''}
+                isNextDoorReview = :isNextDoorReview
         `;
 
         const expressionAttributeValues = {
@@ -227,8 +225,12 @@ const updateReviewById = async (req, res) => {
             ':indexsOfEmoji': indexsOfEmoji,
             ':totalNumberOfEmoji': totalNumberOfEmoji,
             ':isNextDoorReview': isNextDoorReview,
-            ...(imageUrl && { ':imageUrl': imageUrl }),
         };
+
+        if (imageUrl) {
+            updateExpression += ', imageUrl = :imageUrl';
+            expressionAttributeValues[':imageUrl'] = imageUrl;
+        }
 
         // Update review in DynamoDB
         const params = {
@@ -248,6 +250,7 @@ const updateReviewById = async (req, res) => {
         }
     });
 };
+
 
 
 const publistBackReview = async (req,res) => {

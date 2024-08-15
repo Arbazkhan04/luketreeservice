@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom"
 import { useState } from "react";
-import axios from "axios";
 import { getReviewById, updateReviewById } from "../../apiManager/reviewApi";
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
+import { formatMeridiem } from "@mui/x-date-pickers/internals";
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -61,7 +61,7 @@ function EditReview() {
         setLastName(data.lastName || '');
         setCity(data.city || '');
         setNeighbourhoodName(data.neighbourhoodName || '');
-        setSocialMediaLink(data.socialMediaLink || '');
+        setSocialMediaLink(data.socialMediaLink === '<empty>' ? '' : data.socialMediaLink);
         setRating(data.ratting || 0);
         setSelectNumberOfEmojis(data.totalNumberOfEmoji || 0);
         setSelectedEmojiIndices(data.indexsOfEmoji || '');
@@ -109,8 +109,9 @@ function EditReview() {
     if (selectedImage instanceof File) {
       formData.append('image', selectedImage);
     } 
+    
 
-    try {
+     try {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
