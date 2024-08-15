@@ -16,10 +16,12 @@ import { useState, useEffect } from 'react';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [login] = useLoginMutation();
+  const [errors, setErrors] = useState({});
 
   const { token } = useSelector((state) => state.auth);
 
@@ -30,19 +32,35 @@ export default function SignIn() {
     }
   }, [token, navigate]);
 
+  
+  const handleError = (email,password) => {
+    let errors = {};
+    if(!email) errors.email = "Email is required";
+    if(!password) errors.password = "Password is required";
+    return errors;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
+    const eamil = data.get('email');
+    const password = data.get('password');
+
+    const errors = handleError(eamil,password);
+    if(Object.keys(errors).length > 0) {
+      setErrors(errors);
+      return;
+    }
+
     try {
       const res = await login({ email: data.get('email'), password: data.get('password') }).unwrap();
       dispatch(setCredentials({ token: res.token }));
       navigate('/admin/dashboard');
     } catch (error) {
       console.error('An error occurred:', error);
+      setErrors({api:error.data.message});
     }
   };
 
@@ -74,6 +92,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              error={!!errors.email}
+              helperText={errors.email}
             />
             <TextField
               margin="normal"
@@ -84,7 +104,14 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={!!errors.password}
+              helperText={errors.password}
             />
+             {errors.api && (
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                {errors.api}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth

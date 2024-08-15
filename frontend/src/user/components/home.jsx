@@ -8,7 +8,6 @@ import ReviewCard from './reviewCard'
 import { useNavigate } from 'react-router-dom';
 import { getAboutData } from '../../apiManager/aboutApi';
 import { useEffect, useState } from 'react';
-import Loader from './loader';
 
 function Home() {
 
