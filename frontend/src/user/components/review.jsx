@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { createReview } from '../../apiManager/reviewApi';
+import Loader from './loader';
+import { toast,Bounce } from 'react-toastify';
+
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -21,6 +24,7 @@ const ReviewForm = () => {
 
   const [error, setError] = useState(null);
   const [imageError, setImageError] = useState('');
+  const [loading,setLoading] = useState(false);
 
   // Validation state
   const [validationErrors, setValidationErrors] = useState({});
@@ -72,6 +76,23 @@ const ReviewForm = () => {
 
   };
 
+  const resetForm = () => {
+    setRating(0);
+    setSelectedEmojis([]);
+    setSelectNumberOfEmojis(0);
+    setSelectedEmojiIndices('');
+    setAdditionalInfo('');
+    setIsNextdoorReview(false);
+    setSelectedImage(null);
+    setFirstName('');
+    setLastName('');
+    setCity('');
+    setNeighbourhoodName('');
+    setSocialMediaLink('');
+    setValidationErrors({});
+  };
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -102,18 +123,32 @@ const ReviewForm = () => {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
+      setLoading(true);
       const response = await createReview(formData);
       console.log(response);
+      resetForm();
+      
+      toast.success(response.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
     } catch (error) {
       setError(error);
+    }finally{
+      setLoading(false);
     }
-
-
   };
 
   const { token } = useSelector((state) => state.auth);
 
-  // if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader /></div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

@@ -12,6 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLoginMutation } from '../../slices/userApiSlice';
 import { setCredentials } from '../../slices/authSlice';
 import { useState, useEffect } from 'react';
+import {toast,Bounce} from 'react-toastify';
+import Loader from './loader'
 
 const defaultTheme = createTheme();
 
@@ -22,6 +24,7 @@ export default function SignIn() {
 
   const [login] = useLoginMutation();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
 
@@ -55,14 +58,31 @@ export default function SignIn() {
     }
 
     try {
+      setLoading(true);
       const res = await login({ email: data.get('email'), password: data.get('password') }).unwrap();
       dispatch(setCredentials({ token: res.token }));
+      toast.success('login Successfully done', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
       navigate('/admin/dashboard');
     } catch (error) {
       console.error('An error occurred:', error);
       setErrors({api:error.data.message});
     }
+    finally{
+      setLoading(false);
+    }
   };
+
+  if(loading) return <div> <Loader /></div>;
 
   return (
     <ThemeProvider theme={defaultTheme}>
