@@ -9,6 +9,7 @@ import { FaEdit, FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import EditDateModal from './editDateModal';
 import EditReview from './editReview';
+import Loader from '../../user/components/loader';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -21,7 +22,7 @@ export default function Dashboard() {
 
   const [selectedReviewId, setSelectedReviewId] = useState(null);
   const [selectedReviewDate, setSelectedReviewDate] = useState(null);
-
+  const [totalReviews, setTotalReviews] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -46,7 +47,7 @@ export default function Dashboard() {
           : review
       );
 
-      updatedReviews.sort((a,b)=> b.updatedAt - a.updatedAt);
+      updatedReviews.sort((a, b) => b.updatedAt - a.updatedAt);
       setReviews(updatedReviews);
       setIsModalOpen(false);
 
@@ -70,7 +71,7 @@ export default function Dashboard() {
       try {
         const data = await getAllReviews();
         const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
-
+        setTotalReviews(sortedData.length);
         setReviews(sortedData);
       } catch (err) {
         setError(err);
@@ -128,6 +129,7 @@ export default function Dashboard() {
       const response = await deleteReviewById(reviewId);
       console.log(response);
       setReviews((prevReviews) => prevReviews.filter((review) => review.reviewId !== reviewId));
+      setTotalReviews(totalReviews - 1);
     } catch (error) {
       setError(error);
     }
@@ -136,7 +138,7 @@ export default function Dashboard() {
     }
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader /></div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -150,27 +152,15 @@ export default function Dashboard() {
               </div>
               <div className="flex gap-1.5 md:ml-0 pr-4 items-center">
                 <div className="flex gap-1 text-base text-gray-600 whitespace-nowrap items-center">
-                  <div className="flex flex-col justify-center rounded-none">
-                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
-                      <div>3</div>
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
+                  {totalReviews.toString().split('').map((num, index) => (
+                    <div key={index} className="flex flex-col justify-center rounded-none">
+                      <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
+                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                        <div>{num}</div> {/* Render num here */}
+                        <div className="shrink-0 w-px h-2 bg-gray-50" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col justify-center text-center rounded-none">
-                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
-                      <div>4</div>
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-center text-center rounded-none">
-                    <div className="flex gap-1 items-start py-2 rounded bg-neutral-100">
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
-                      <div>6</div>
-                      <div className="shrink-0 w-px h-2 bg-gray-50" />
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 <div className="flex gap-1 items-center">
                   <Rating value={'5'} />
