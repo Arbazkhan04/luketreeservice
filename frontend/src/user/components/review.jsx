@@ -120,12 +120,12 @@ const ReviewForm = () => {
     }
 
     try {
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
       setLoading(true);
       const response = await createReview(formData);
-      console.log(response);
+      // console.log(response);
       resetForm();
       
       toast(response.message, {

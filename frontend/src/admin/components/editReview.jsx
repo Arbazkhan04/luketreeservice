@@ -114,12 +114,12 @@ function EditReview() {
     
 
      try {
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
       setLoading(true);
       const response = await updateReviewById(reviewId, formData);
-      console.log(response);
+      // console.log(response);
       toast('Review Updated Successfully!', {
         position: "top-right",
         autoClose: 5000,

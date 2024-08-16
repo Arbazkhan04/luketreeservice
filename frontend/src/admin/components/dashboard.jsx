@@ -40,7 +40,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const response = await updateReviewDateById(reviewId, Number(date.getTime()));
-      console.log(response);
+      // console.log(response);
       const updatedReviews = reviews.map(review =>
         review.reviewId === reviewId
           ? { ...review, updatedAt: Number(date.getTime()) }
@@ -94,7 +94,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const response = await unPublishReviewById(reviewId);
-      console.log(response);
+      // console.log(response);
       setReviews((prevReviews) => prevReviews.map(review =>
         review.reviewId === reviewId ? { ...review, status: "0" } : review
       ));
@@ -110,7 +110,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const response = await publishBackReviewById(reviewId);
-      console.log(response);
+      // console.log(response);
       setReviews((prevReviews) => prevReviews.map(review =>
         review.reviewId === reviewId ? { ...review, status: "1" } : review
       ));
@@ -127,7 +127,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const response = await deleteReviewById(reviewId);
-      console.log(response);
+      // console.log(response);
       setReviews((prevReviews) => prevReviews.filter((review) => review.reviewId !== reviewId));
       setTotalReviews(totalReviews - 1);
     } catch (error) {

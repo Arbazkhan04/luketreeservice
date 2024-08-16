@@ -16,25 +16,9 @@ const Review = lazy(() => import('./user/components/review'))
 
 
 function App() {
-  // const [isAdmin, setIsAdmin] = useState(false);
-  // const [isAuthenticated, setIsAuthenicated] = useState(false);
-
-  // const handleLogin = () => {
-  //   setIsAdmin(true);
-  //   setIsAuthenicated(true);
-  // }
-  // const handleLogout = () => {
-  //   setIsAdmin(false);
-  //   setIsAuthenicated(false);
-  // }
 
   return (
     <Router>
-
-      {/* <Header isAdmin={isAdmin}
-        isAuthenticated={isAuthenticated}
-        handleLogin={handleLogin}
-        handleLogout={handleLogout} /> */}
        <Header />
       <Suspense fallback={<Loader />}>
         <Routes>

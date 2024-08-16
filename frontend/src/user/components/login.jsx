@@ -74,7 +74,6 @@ export default function SignIn() {
         });
       navigate('/admin/dashboard');
     } catch (error) {
-      console.error('An error occurred:', error);
       setErrors({api:error.data.message});
     }
     finally{
@@ -83,7 +82,6 @@ export default function SignIn() {
   };
 
   if(loading) return <div> <Loader /></div>;
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

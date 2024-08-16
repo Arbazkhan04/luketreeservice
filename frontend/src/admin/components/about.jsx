@@ -42,7 +42,7 @@ const About = () => {
     try {
       setLoading(true);
       const response = await updateAboutData(aboutData.aboutId, data);
-      console.log(response);
+      // console.log(response);
       toast(response.message, {
         position: "top-right",
         autoClose: 5000,
@@ -56,7 +56,7 @@ const About = () => {
         });
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }finally {  
       setLoading(false);
     }
