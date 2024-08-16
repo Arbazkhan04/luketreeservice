@@ -4,6 +4,8 @@ import { useState } from "react";
 import { getReviewById, updateReviewById } from "../../apiManager/reviewApi";
 import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, FormControlLabel } from '@mui/material';
 import { formatMeridiem } from "@mui/x-date-pickers/internals";
+import Loader from '../../user/components/loader';
+import { toast, Bounce } from 'react-toastify';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -115,16 +117,30 @@ function EditReview() {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
+      setLoading(true);
       const response = await updateReviewById(reviewId, formData);
       console.log(response);
+      toast('Review Updated Successfully!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
     } catch (error) {
       setError(error);
+    }finally{
+      setLoading(false);
     }
 
 
   };
 
-  if (loading) return <h1>Loading...</h1>
+  if (loading) return <h1><Loader /></h1>
   if (error) return <h1>error.message</h1>
 
   return (

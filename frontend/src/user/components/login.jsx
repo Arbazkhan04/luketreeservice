@@ -61,7 +61,7 @@ export default function SignIn() {
       setLoading(true);
       const res = await login({ email: data.get('email'), password: data.get('password') }).unwrap();
       dispatch(setCredentials({ token: res.token }));
-      toast.success('login Successfully done', {
+      toast('login Successful', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -69,7 +69,7 @@ export default function SignIn() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
         transition: Bounce,
         });
       navigate('/admin/dashboard');

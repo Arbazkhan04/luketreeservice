@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import {getAboutData,updateAboutData} from '../../apiManager/aboutApi';
+import Loader from '../../user/components/loader';
+import { toast, Bounce } from 'react-toastify';
 
 const About = () => {
   const [aboutData, setAboutData] = useState({});
@@ -38,16 +40,30 @@ const About = () => {
     };
 
     try {
-      console.log(aboutData.aboutId);
+      setLoading(true);
       const response = await updateAboutData(aboutData.aboutId, data);
       console.log(response);
+      toast(response.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+
     } catch (error) {
       console.log(error);
+    }finally {  
+      setLoading(false);
     }
     // Add your submission logic here
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader /></div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

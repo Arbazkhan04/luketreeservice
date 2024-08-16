@@ -19,9 +19,10 @@ export default function ReviewCard({setTotalReview}) {
             try {
                 const data = await getAllReviews();
                 const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
-                setReviews(sortedData.filter(review => review.status === "1")); 
+                const filterData = sortedData.filter(review => review.status === "1"); 
 
-                setTotalReview(sortedData.length);
+                setTotalReview(filterData.length);
+                setReviews(filterData);
 
             } catch (err) {
                 setError(err);
