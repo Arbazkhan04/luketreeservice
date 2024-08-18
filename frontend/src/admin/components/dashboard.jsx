@@ -239,13 +239,15 @@ export default function Dashboard() {
                       <FaEdit />
                     </button>
                     {/* Add the EditDateModal component */}
-                    <EditDateModal
-                      reviewId={selectedReviewId}
-                      initialDate={selectedReviewDate}
-                      isOpen={isModalOpen}
-                      onClose={handleCloseModal}
-                      onSave={handleSaveChanges}
-                    />
+                   {isModalOpen && selectedReviewId === review.reviewId && (
+                     <EditDateModal
+                     reviewId={selectedReviewId}
+                     initialDate={selectedReviewDate}
+                     isOpen={isModalOpen}
+                     onClose={handleCloseModal}
+                     onSave={handleSaveChanges}
+                   />
+                   )}
                   </div>
                 </div>
 
