@@ -22,7 +22,7 @@ const createReview = async (req, res) => {
         }
 
         try {
-            const { firstName, lastName, city, neighbourhoodName, ratting, status, socialMediaLink, review,indexsOfEmoji,totalNumberOfEmoji,isNextDoorReview,createdAt,updatedAt} = req.body;
+            const { firstName, lastName, city, neighbourhoodName, ratting, status, socialMediaLink, review,indexsOfEmoji,totalNumberOfEmoji,isNextDoorReview} = req.body;
 
             if (
                 typeof firstName !== 'string' ||
@@ -43,8 +43,8 @@ const createReview = async (req, res) => {
             const reviewId = uuidv4();
             // unix time in milliseconds
             const timestamp = new Date().getTime();
-            const createdAtTimestamp = Number(createdAt);
-            const updatedAtTimestamp = Number(updatedAt);
+            // const createdAtTimestamp = Number(createdAt);
+            // const updatedAtTimestamp = Number(updatedAt);
             const imageName = `${reviewId}.jpg`;
             const imageUrl = `https://${S3_BUCKET}.s3.amazonaws.com/${imageName}`;
 
@@ -73,10 +73,10 @@ const createReview = async (req, res) => {
                     indexsOfEmoji:indexsOfEmoji || '<empty>',
                     totalNumberOfEmoji:totalNumberOfEmoji || '<empty>',
                     isNextDoorReview:isNextDoorReview || '0',
-                    // createdAt: timestamp,
-                    // updatedAt: timestamp,
-                    createdAt:createdAtTimestamp,
-                    updatedAt:updatedAtTimestamp
+                    createdAt: timestamp,
+                    updatedAt: timestamp,
+                    // createdAt:createdAtTimestamp,
+                    // updatedAt:updatedAtTimestamp
                 },
             };
 
