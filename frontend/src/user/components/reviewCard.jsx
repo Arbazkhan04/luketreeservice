@@ -48,10 +48,10 @@ export default function ReviewCard({setTotalReview}) {
         <>
             {reviews.map((review) => {
                 const isExpanded = expandedReviews[review.reviewId];
-                const isLongReview = review.review.length > 350;
+                const isLongReview = review.review.length > 370;
                 const reviewText = isExpanded || !isLongReview
                     ? review.review
-                    : review.review.substring(0, 350) + '...';
+                    : review.review.substring(0, 370) + '...';
 
                 return (
                     <div

@@ -175,10 +175,10 @@ export default function Dashboard() {
       </div>
       {reviews.map((review) => {
         const isExpanded = expandedReviews[review.reviewId];
-        const isLongReview = review.review.length > 100;
+        const isLongReview = review.review.length > 370;
         const reviewText = isExpanded || !isLongReview
           ? review.review
-          : review.review.substring(0, 140) + '...';
+          : review.review.substring(0, 370) + '...';
 
         return (
           <div key={review.reviewId} className="flex flex-col items-center w-full">
