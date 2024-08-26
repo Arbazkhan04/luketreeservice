@@ -239,15 +239,15 @@ export default function Dashboard() {
                       <FaEdit />
                     </button>
                     {/* Add the EditDateModal component */}
-                   {isModalOpen && selectedReviewId === review.reviewId && (
-                     <EditDateModal
-                     reviewId={selectedReviewId}
-                     initialDate={selectedReviewDate}
-                     isOpen={isModalOpen}
-                     onClose={handleCloseModal}
-                     onSave={handleSaveChanges}
-                   />
-                   )}
+                    {isModalOpen && selectedReviewId === review.reviewId && (
+                      <EditDateModal
+                        reviewId={selectedReviewId}
+                        initialDate={selectedReviewDate}
+                        isOpen={isModalOpen}
+                        onClose={handleCloseModal}
+                        onSave={handleSaveChanges}
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -268,17 +268,18 @@ export default function Dashboard() {
                     {review.indexsOfEmoji.split('').map((index, idx) => (
                       <div
                         key={idx}
-                        className={`text-2xl absolute ${idx === 1 ? 'left-2 top-0' : 'left-0 top-0'
+                        className={`text-2xl absolute ${idx === 1 ? 'left-3 top-0' : 'left-0 top-0'
                           }`}
                       >
                         {emojisList[index]}
                       </div>
                     ))}
-                    {review.totalNumberOfEmoji > 2 ? (
-                      <div className="my-auto mx-6">+{review.totalNumberOfEmoji}</div>
+                    {review.indexsOfEmoji !=='<empty>' && review.indexsOfEmoji.length >= 2 ? (
+                      <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
                     ) : (
-                      <div className="my-auto mx-6">{review.totalNumberOfEmoji}</div>
+                      <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
                     )}
+
 
                   </div>
                 </div>)

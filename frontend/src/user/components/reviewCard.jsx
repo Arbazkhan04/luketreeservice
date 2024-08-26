@@ -7,7 +7,7 @@ import { getAllReviews } from '../../apiManager/reviewApi';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
-export default function ReviewCard({setTotalReview}) {
+export default function ReviewCard({ setTotalReview }) {
 
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function ReviewCard({setTotalReview}) {
             try {
                 const data = await getAllReviews();
                 const sortedData = data.sort((a, b) => b.updatedAt - a.updatedAt);
-                const filterData = sortedData.filter(review => review.status === "1"); 
+                const filterData = sortedData.filter(review => review.status === "1");
 
                 setTotalReview(filterData.length);
                 setReviews(filterData);
@@ -33,6 +33,8 @@ export default function ReviewCard({setTotalReview}) {
 
         fetchReviews();
     }, []);
+
+
 
     const handleToggle = (reviewId) => {
         setExpandedReviews(prev => ({
@@ -120,27 +122,27 @@ export default function ReviewCard({setTotalReview}) {
                                 {isExpanded ? 'Read Less' : 'Read More'}
                             </div>
                         )}
-                        {review.indexsOfEmoji !='<empty>' && (<div className="flex gap-2 mt-2">
+                        {review.indexsOfEmoji != '<empty>' && (<div className="flex gap-2 mt-2">
                             <div className="flex text-xs whitespace-nowrap text-zinc-900 relative">
                                 {review.indexsOfEmoji.split('').map((index, idx) => (
                                     <div
                                         key={idx}
-                                        className={`text-2xl absolute ${idx === 1 ? 'left-2 top-0' : 'left-0 top-0'
+                                        className={`text-2xl absolute ${idx === 1 ? 'left-3 top-0' : 'left-0 top-0'
                                             }`}
                                     >
                                         {emojisList[index]}
                                     </div>
                                 ))}
-                                {review.totalNumberOfEmoji > 2 ? (
-                                    <div className="my-auto mx-6">+{review.totalNumberOfEmoji}</div>
+                                {review.indexsOfEmoji !== '<empty>' && review.indexsOfEmoji.length >= 2 ? (
+                                    <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
                                 ) : (
-                                    <div className="my-auto mx-6">{review.totalNumberOfEmoji}</div>
+                                    <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
                                 )}
-                                
+
                             </div>
                         </div>)
-                       }
-                        
+                        }
+
                     </div>
                 );
             })}

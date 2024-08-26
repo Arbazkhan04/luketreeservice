@@ -32,18 +32,33 @@ function EditReview() {
 
   const handleEmojiChange = (emoji, index) => {
     setSelectedEmojis((prev) => {
-      if (prev.includes(emoji)) {
-        const updatedEmojis = prev.filter((item) => item !== emoji);
-        setSelectedEmojiIndices((prevIndices) => prevIndices.replace(index.toString(), ''));
-        return updatedEmojis;
-      } else if (prev.length < 2) {
-        setSelectedEmojiIndices((prevIndices) => prevIndices + index.toString());
-        return [...prev, emoji];
-      } else {
-        return prev;
-      }
+        if (prev.includes(emoji)) {
+            // Emoji already selected: Remove it and its index from selected lists
+            const updatedEmojis = prev.filter((item) => item !== emoji);
+            setSelectedEmojiIndices((prevIndices) => {
+                // Remove the index from the string
+                const updatedIndices = prevIndices.split('')
+                    .filter(i => i !== index.toString())
+                    .join('');
+                return updatedIndices;
+            });
+            return updatedEmojis;
+        } else if (prev.length < 2) {
+            // New emoji selection: Add it and its index, ensuring no duplicates
+            setSelectedEmojiIndices((prevIndices) => {
+                // Check if the index is already in the string
+                if (!prevIndices.includes(index.toString())) {
+                    return prevIndices + index.toString();
+                }
+                return prevIndices;
+            });
+            return [...prev, emoji];
+        } else {
+            return prev;  // No changes if more than 2 emojis are selected
+        }
     });
-  };
+};
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -66,7 +81,7 @@ function EditReview() {
         setSocialMediaLink(data.socialMediaLink === '<empty>' ? '' : data.socialMediaLink);
         setRating(data.ratting || 0);
         setSelectNumberOfEmojis(data.totalNumberOfEmoji || 0);
-        setSelectedEmojiIndices(data.indexsOfEmoji || '');
+        setSelectedEmojiIndices(data.indexsOfEmoji === '<empty>' ? '' : data.indexsOfEmoji);
 
         setAdditionalInfo(data.review || '');
         setIsNextdoorReview(data.isNextDoorReview === "1" ? true : false || false);
