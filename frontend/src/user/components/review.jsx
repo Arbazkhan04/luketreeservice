@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { createReview } from '../../apiManager/reviewApi';
 import Loader from './loader';
 import { toast,Bounce } from 'react-toastify';
+import Resizer from 'react-image-file-resizer';
 
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
@@ -77,20 +78,29 @@ const ReviewForm = () => {
 };
 
 
+const handleImageChange = (event) => {
+  const file = event.target.files[0];
+  const validImageTypes = ['image/jpeg', 'image/png'];
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    const validImageTypes = ['image/jpeg', 'image/png'];
-
-    if (file && !validImageTypes.includes(file.type)) {
-      setImageError('Please upload a jpg or png file.');
-      setSelectedImage(null);
-    } else {
-      setImageError('');
-      setSelectedImage(file);
-    }
-
-  };
+  if (file && validImageTypes.includes(file.type)) {
+    Resizer.imageFileResizer(
+      file,
+      81, // width in pixels
+      77, // height in pixels
+      file.type === 'image/jpeg' ? 'JPEG' : 'PNG', // output format
+      100, // quality percentage
+      0, // rotation degree
+      (uri) => {
+        setImageError('');
+        setSelectedImage(uri);
+      },
+      'blob' // output type: 'base64' or 'blob'
+    );
+  } else {
+    setImageError('Please upload a jpg or png file.');
+    setSelectedImage(null);
+  }
+};
 
   const resetForm = () => {
     setRating(0);
@@ -141,7 +151,7 @@ const ReviewForm = () => {
       // }
       setLoading(true);
       const response = await createReview(formData);
-      // console.log(response);
+      console.log(response);
       resetForm();
       
       toast(response.message, {

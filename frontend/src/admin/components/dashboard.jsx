@@ -1,14 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Rating from '../../user/components/customRatting';
-import heart from '../../assets/hearth.svg';
-import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
 import { getAllReviews, unPublishReviewById, publishBackReviewById, deleteReviewById, updateReviewDateById } from '../../apiManager/reviewApi';
 import { FaEdit, FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import EditDateModal from './editDateModal';
-import EditReview from './editReview';
+
 import Loader from '../../user/components/loader';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
@@ -203,29 +201,16 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
-                  <div className="flex gap-1.5 whitespace-nowrap">
-                    <img
-                      loading="lazy"
-                      src={location}
-                      className="shrink-0 w-5 aspect-square"
-                    />
-                    <div className="my-auto">{review.city}</div>
-                  </div>
-                  <div className="flex gap-1.5">
+                <div className="flex gap-2.5 justify-between mt-2 w-full">
+                  <div className="flex gap-1.5 whitespace-nowrap text-xs leading-4 text-slate-500">
                     <img
                       loading="lazy"
                       src={neighthood}
                       className="shrink-0 w-5 aspect-square"
                     />
-                    <div className="my-auto">{review.neighbourhoodName}</div>
+                    <div className="my-auto">{review.city}, {review.neighbourhoodName}</div>
                   </div>
-                </div>
 
-                <div className="flex gap-2.5 justify-between mt-2">
-                  <div className="text-xs font-semibold leading-5 text-center text-green-700">
-                    {review.isNextDoorReview === "1" && "Nextdoor review"}
-                  </div>
                   <div className="flex gap-2 justify-start items-center">
                     <div className="my-auto text-xs leading-4 text-slate-500">
                       {new Date(review.updatedAt).toLocaleDateString('en-US', {
@@ -251,6 +236,13 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                <div className="flex gap-2.5 justify-between mt-2">
+                  <div className="text-xs font-semibold leading-5 text-center text-green-700">
+                    {review.isNextDoorReview === "1" && "Nextdoor review"}
+                  </div>
+                  
+                </div>
+
                 <div className="mt-2 text-xs leading-5 text-slate-900">
                   {reviewText}
                 </div>
@@ -274,10 +266,15 @@ export default function Dashboard() {
                         {emojisList[index]}
                       </div>
                     ))}
-                    {review.indexsOfEmoji !=='<empty>' && review.indexsOfEmoji.length >= 2 ? (
-                      <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
-                    ) : (
-                      <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
+                    
+                    {review.totalNumberOfEmoji > 0 && (
+                      <>
+                      {review.indexsOfEmoji !=='<empty>' && review.indexsOfEmoji.length >= 2 ? (
+                        <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
+                      ) : (
+                        <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
+                      )}
+                      </>
                     )}
 
 

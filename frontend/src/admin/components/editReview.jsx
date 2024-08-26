@@ -6,6 +6,7 @@ import { Box, TextField, Button, Rating, Typography, Grid, Paper, Checkbox, Form
 import { formatMeridiem } from "@mui/x-date-pickers/internals";
 import Loader from '../../user/components/loader';
 import { toast, Bounce } from 'react-toastify';
+import Resizer from 'react-image-file-resizer';
 
 const emojisList = ['❤️', '😊', '😍', '😲', '😎'];
 
@@ -63,11 +64,11 @@ function EditReview() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedImage(file); // Store the actual file, not the URL
+     setSelectedImage(file);
     }
   };
 
-  //fetch the review by id
+  
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -124,7 +125,12 @@ function EditReview() {
     formData.append('isNextDoorReview', isNextdoorReview ? '1' : '0');
 
     if (selectedImage instanceof File) {
-      formData.append('image', selectedImage);
+      try {
+        const resizedImage = await resizeImage(selectedImage);
+        formData.append('image', resizedImage);
+      } catch (error) {
+        console.error("Error resizing image: ", error);
+      }
     } 
     
 
@@ -337,3 +343,22 @@ function EditReview() {
 }
 
 export default EditReview
+
+//image resizer function
+const resizeImage = (file) => {
+  return new Promise((resolve, reject) => {
+    Resizer.imageFileResizer(
+      file,
+      81, // width in pixels
+      77, // height in pixels
+      file.type === 'image/jpeg' ? 'JPEG' : 'PNG', // output format
+      100, // quality percentage
+      0, // rotation degree
+      (uri) => {
+        resolve(uri);
+      },
+      'blob' // output type: 'base64' or 'blob'
+    );
+  });
+};
+

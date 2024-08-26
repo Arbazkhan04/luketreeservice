@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Rating from './customRatting';
-import heart from '../../assets/hearth.svg';
-import location from '../../assets/location.svg';
 import neighthood from '../../assets/neighbour.svg';
 import { getAllReviews } from '../../apiManager/reviewApi';
 
@@ -81,26 +79,12 @@ export default function ReviewCard({ setTotalReview }) {
                             <div className="flex gap-1.5 whitespace-nowrap">
                                 <img
                                     loading="lazy"
-                                    src={location}
-                                    className="shrink-0 w-5 aspect-square"
-                                />
-                                <div className="my-auto">{review.city}</div>
-                            </div>
-                            <div className="flex gap-1.5">
-                                <img
-                                    loading="lazy"
                                     src={neighthood}
                                     className="shrink-0 w-5 aspect-square"
                                 />
-                                <div className="my-auto">{review.neighbourhoodName}</div>
+                                <div className="mt-1">{review.city}, {review.neighbourhoodName}</div>
                             </div>
-                        </div>
-
-                        <div className="flex gap-2.5 justify-between mt-2">
-                            <div className="text-xs font-semibold leading-5 text-center text-green-700">
-                                {review.isNextDoorReview === "1" && "Nextdoor review"}
-                            </div>
-                            <div className="my-auto text-xs leading-4 text-slate-500">
+                            <div className="text-xs leading-4 text-slate-500">
                                 {new Date(review.updatedAt).toLocaleDateString('en-US', {
                                     weekday: 'short',  // "Fri"
                                     year: 'numeric',   // "2024"
@@ -108,6 +92,13 @@ export default function ReviewCard({ setTotalReview }) {
                                     day: 'numeric'     // "9"
                                 })}
                             </div>
+                        </div>
+
+                        <div className="flex gap-2.5 justify-between">
+                            <div className="text-xs font-semibold leading-5 text-center text-green-700 mt-2">
+                                {review.isNextDoorReview === "1" && "Nextdoor review"}
+                            </div>
+                            
                         </div>
 
                         <div className="mt-2 text-xs leading-5 text-slate-900">
@@ -133,10 +124,14 @@ export default function ReviewCard({ setTotalReview }) {
                                         {emojisList[index]}
                                     </div>
                                 ))}
-                                {review.indexsOfEmoji !== '<empty>' && review.indexsOfEmoji.length >= 2 ? (
-                                    <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
-                                ) : (
-                                    <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
+                                {review.totalNumberOfEmoji > 0 && (
+                                    <>
+                                        {review.indexsOfEmoji !== '<empty>' && review.indexsOfEmoji.length >= 2 ? (
+                                            <div className="my-2 mx-10">+{review.totalNumberOfEmoji}</div>
+                                        ) : (
+                                            <div className="my-2 mx-8">+{review.totalNumberOfEmoji}</div>
+                                        )}
+                                    </>
                                 )}
 
                             </div>
