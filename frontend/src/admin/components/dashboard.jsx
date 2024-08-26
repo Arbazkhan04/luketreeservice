@@ -191,7 +191,7 @@ export default function Dashboard() {
                     <img
                       loading="lazy"
                       src={review.imageUrl}
-                      className="shrink-0 aspect-square w-[34px] h-[34px] rounded-full object-cover"
+                      className="shrink-0 aspect-square w-[54px] h-[54px] rounded-full object-cover"
                     />
                     <div className="my-auto">
                       {review.firstName} {review.lastName}
@@ -268,7 +268,7 @@ export default function Dashboard() {
                     {review.indexsOfEmoji.split('').map((index, idx) => (
                       <div
                         key={idx}
-                        className={`text-1xl absolute ${idx === 1 ? 'left-2 top-0' : 'left-0 top-0'
+                        className={`text-2xl absolute ${idx === 1 ? 'left-2 top-0' : 'left-0 top-0'
                           }`}
                       >
                         {emojisList[index]}
