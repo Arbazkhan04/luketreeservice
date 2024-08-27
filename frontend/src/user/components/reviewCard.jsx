@@ -75,7 +75,7 @@ export default function ReviewCard({ setTotalReview }) {
                             </div>
                         </div>
 
-                        <div className="flex gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
+                        <div className="flex flex-wrap gap-2.5 justify-between mt-2 w-full text-xs leading-4 text-slate-500">
                             <div className="flex gap-1.5 whitespace-nowrap">
                                 <img
                                     loading="lazy"

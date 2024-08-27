@@ -6,6 +6,7 @@ import { getAllReviews, unPublishReviewById, publishBackReviewById, deleteReview
 import { FaEdit, FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import EditDateModal from './editDateModal';
+import ConfirmDelete from './deleteMessage';
 
 import Loader from '../../user/components/loader';
 
@@ -22,6 +23,8 @@ export default function Dashboard() {
   const [selectedReviewDate, setSelectedReviewDate] = useState(null);
   const [totalReviews, setTotalReviews] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  
 
 
   const handleEditClick = (reviewId, date) => {
@@ -30,8 +33,34 @@ export default function Dashboard() {
     setIsModalOpen(true);
   };
 
+
+  const handleConfirmMessage = (reviewId) => {
+    setSelectedReviewId(reviewId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handlecloseDeleteModal = () => { 
+    setIsDeleteModalOpen(false);
+  }
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      setLoading(true);
+      const response = await deleteReviewById(reviewId);
+      // console.log(response);
+      setReviews((prevReviews) => prevReviews.filter((review) => review.reviewId !== reviewId));
+      setTotalReviews(totalReviews - 1);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      setError(error);
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleSaveChanges = async (reviewId, date) => {
@@ -121,20 +150,7 @@ export default function Dashboard() {
     }
   }
 
-  const handleDeleteReview = async (reviewId) => {
-    try {
-      setLoading(true);
-      const response = await deleteReviewById(reviewId);
-      // console.log(response);
-      setReviews((prevReviews) => prevReviews.filter((review) => review.reviewId !== reviewId));
-      setTotalReviews(totalReviews - 1);
-    } catch (error) {
-      setError(error);
-    }
-    finally {
-      setLoading(false);
-    }
-  }
+  
 
   if (loading) return <div><Loader /></div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -201,7 +217,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex gap-2.5 justify-between mt-2 w-full">
+                <div className="flex flex-wrap gap-2.5 justify-between mt-2 w-full">
                   <div className="flex gap-1.5 whitespace-nowrap text-xs leading-4 text-slate-500">
                     <img
                       loading="lazy"
@@ -301,9 +317,18 @@ export default function Dashboard() {
                         <FaEye />
                       </button>
                     )}
-                  <button onClick={() => handleDeleteReview(review.reviewId)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
+                  <button onClick={() => handleConfirmMessage(review.reviewId)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
                     <FaTrash />
                   </button>
+                  {/* Add the EditDateModal component */}
+                  {isDeleteModalOpen && selectedReviewId === review.reviewId && (
+                      <ConfirmDelete
+                        reviewId={selectedReviewId}
+                        isOpen={isDeleteModalOpen}
+                        onClose={handlecloseDeleteModal}
+                        onSave={handleDeleteReview}
+                      />
+                    )}
                 </div>
               </div>
             </div>
