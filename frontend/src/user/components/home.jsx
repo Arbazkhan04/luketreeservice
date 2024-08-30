@@ -92,14 +92,19 @@ function Home() {
                         <div className="my-auto leading-6 text-gray-500">
                             Tap here to call
                         </div>
-                        <div className="flex gap-1 justify-center py-2 pr-3 pl-2 font-medium tracking-widest text-center whitespace-nowrap bg-white border border-solid shadow border-zinc-200 leading-[155%] rounded-[1000px] text-zinc-950">
-                            <img
-                                loading="lazy"
-                                src={phone}
-                                className="shrink-0 self-start aspect-[0.95] w-[19px]"
-                            />
-                            <div>{aboutData.phone}</div>
+                        <div
+                            className="flex gap-1 justify-center py-2 pr-3 pl-2 font-medium tracking-widest text-center whitespace-nowrap bg-white border border-solid shadow border-zinc-200 leading-[155%] rounded-[1000px] text-zinc-950"
+                        >
+                            <a href={`tel:${aboutData.phone}`} className="flex items-center gap-1">
+                                <img
+                                    loading="lazy"
+                                    src={phone}
+                                    className="shrink-0 self-start aspect-[0.95] w-[19px]"
+                                />
+                                <div>{aboutData.phone}</div>
+                            </a>
                         </div>
+
                     </div>
                     <div className="self-start mt-2 text-sm leading-6 text-gray-500">
                         Ask for Luke
@@ -130,7 +135,7 @@ function Home() {
                 {/* photo gallery section end */}
 
                 {/* review sections */}
-                <ReviewCard setTotalReview={setTotalReview}/>
+                <ReviewCard setTotalReview={setTotalReview} />
                 {/* review sections end */}
             </div >
 
