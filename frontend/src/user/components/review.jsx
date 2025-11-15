@@ -135,7 +135,7 @@ const handleImageChange = (event) => {
     formData.append('city', city);
     formData.append('neighbourhoodName', neighbourhoodName);
     formData.append('ratting', ratting.toString());
-    formData.append('status', '1');
+    formData.append('status', '0');
     formData.append('socialMediaLink', socialMediaLink);
     formData.append('review', review);
     formData.append('indexsOfEmoji', selectedEmojiIndices);

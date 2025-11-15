@@ -73,7 +73,7 @@ function Home() {
 
 
                 {/* about setion */}
-                <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
+                 <div className="flex flex-col p-6 mt-2 w-full bg-white rounded-2xl border border-solid shadow-lg border-zinc-200">
                     <div className="flex justify-center items-center px-2.5 w-12 h-12 bg-blue-600 rounded-xl border border-blue-600 border-solid shadow-md rounded-full">
                         <img
                             loading="lazy"
@@ -127,7 +127,7 @@ function Home() {
                             <div>Insured</div>
                         </div>
                     </div>
-                </div>
+                </div> 
                 {/* about setion end */}
 
                 {/* photo gallery section */}

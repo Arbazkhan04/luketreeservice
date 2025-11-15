@@ -5,12 +5,21 @@ service: serverless
 useDotenv: true
 
 stages:
-  default:
+  dev: # ✅ Your production environment
     params:
-      aboutTableName: "about-table-${sls:stage}"
-      reviewTableName: "review-table-${sls:stage}"
-      userTableName: "auth-table-${sls:stage}"
-      s3BucketName: "jackmist-${sls:stage}"
+      aboutTableName: "about-table-dev"
+      reviewTableName: "review-table-dev"
+      userTableName: "auth-table-dev"
+      landingImagesTableName: "landing-images-table-dev" 
+      s3BucketName: "jackmist-dev"
+
+  testing: # 🧪 For local/development testing
+    params:
+      aboutTableName: "about-table-testing"
+      reviewTableName: "review-table-testing"
+      userTableName: "auth-table-testing"
+      landingImagesTableName: "landing-images-table-testing"
+      s3BucketName: "jackmist-testing"
 
 provider:
   name: aws
@@ -30,6 +39,8 @@ provider:
             - Fn::GetAtt: [UsersTable, Arn]
             - Fn::GetAtt: [ReviewTable, Arn]
             - Fn::GetAtt: [AuthTable, Arn]
+            - Fn::GetAtt: [LandingImagesTable, Arn]
+
         - Effect: Allow
           Action:
             - s3:PutObject
@@ -41,6 +52,7 @@ provider:
     REVIEW_TABLE: ${param:reviewTableName}
     USER_TABLE: ${param:userTableName}
     S3_BUCKET: ${param:s3BucketName}
+    LANDING_IMAGES_TABLE: ${param:landingImagesTableName}
     JWT_SECRET: ${env:JWt_KEY}
 
 functions:
@@ -86,6 +98,18 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${param:userTableName}
+
+    LandingImagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: imageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: imageId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:landingImagesTableName}
 
     ReviewImagesBucket:
       Type: AWS::S3::Bucket
